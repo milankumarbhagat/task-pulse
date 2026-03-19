@@ -1,0 +1,32 @@
+<header class="app-header">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-text">{{appName}}</span>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/task" routerLinkActive="active" class="nav-item">
+        <i class="icon-task"></i>
+        <span>Tasks</span>
+      </a>
+      <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+        <i class="icon-profile"></i>
+        <span>Profile</span>
+      </a>
+    </div>
+    <div class="nav-auth">
+      <a routerLink="/login" routerLinkActive="active" class="btn-login">Login</a>
+      <a routerLink="/sign-up" routerLinkActive="active" class="btn-signup">Sign Up</a>
+    </div>
+  </nav>
+</header>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+</div>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

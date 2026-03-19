@@ -1,0 +1,103 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <h2>Join {{appName}}</h2>
+      <p>Design your workflow, effortlessly.</p>
+    </div>
+
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="signup-form">
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-1 custom-field">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="John">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="signUpForm.get('firstName')?.hasError('required')">Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-1 custom-field">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" placeholder="Doe">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width custom-field">
+        <mat-label>Email Address</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">Required</mat-error>
+        <mat-error *ngIf="signUpForm.get('email')?.hasError('email') && !signUpForm.get('email')?.hasError('required')">Invalid email</mat-error>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-1 custom-field">
+          <mat-label>Phone Number</mat-label>
+          <input matInput type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
+          <mat-icon matPrefix>phone</mat-icon>
+          <mat-error *ngIf="signUpForm.get('phone')?.hasError('pattern')">Invalid phone</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-1 custom-field">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dob">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row align-center">
+        <div class="gender-section flex-1 custom-field-container">
+          <label class="section-label">Gender</label>
+          <mat-radio-group formControlName="gender" color="primary" class="modern-radio-group">
+            <mat-radio-button value="male">Male</mat-radio-button>
+            <mat-radio-button value="female">Female</mat-radio-button>
+            <mat-radio-button value="other">Other</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <mat-form-field appearance="outline" class="flex-1 custom-field">
+          <mat-label>Occupation</mat-label>
+          <mat-select formControlName="occupation">
+            <mat-option *ngFor="let occ of occupations" [value]="occ">
+              {{occ}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>work</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width mt-2 custom-field">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Required</mat-error>
+        <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength') && !signUpForm.get('password')?.hasError('required')">Min 8 chars</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width custom-field">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword">
+        <mat-icon matPrefix>lock_outline</mat-icon>
+        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
+          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('required')">Required</mat-error>
+        <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</mat-error>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="!signUpForm.valid && signUpForm.touched">
+          Create Account
+          <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </form>
+    
+    <div class="login-prompt">
+      <p>Already have an account? <a routerLink="/login" class="login-link">Sign In</a></p>
+    </div>
+  </div>
+</div>
