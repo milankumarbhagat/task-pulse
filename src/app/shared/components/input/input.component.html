@@ -1,0 +1,27 @@
+<div class="form-group">
+
+    <label [for]="id">{{ label }}</label>
+
+    <div class="input-wrapper">
+
+        <!-- Icon -->
+        <i *ngIf="icon" [class]="icon"></i>
+
+        <!-- Input -->
+        <input [type]="inputType" [id]="id" [formControl]="control" [placeholder]="placeholder" [ngClass]="{
+        'is-invalid': isSubmitted && control?.errors
+      }" />
+
+    </div>
+
+    <!-- Error Messages -->
+    <div *ngIf="isSubmitted && control?.errors" class="error-message">
+
+        <span *ngIf="control?.errors?.['required']">
+            {{ label }} is required
+        </span>
+        <ng-content></ng-content>
+
+    </div>
+
+</div>

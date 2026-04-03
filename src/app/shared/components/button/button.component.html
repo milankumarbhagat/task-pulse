@@ -1,0 +1,5 @@
+<button [type]="buttonType" [ngClass]="classes" [disabled]="disabled || loading" (click)="onClick()" [name]="buttonName"
+    [id]="id" [class]="class">
+    {{label}}
+    <ng-content></ng-content><!-- It is used to display every thing that put under the customised button such as text, emoji, icons etc. -->
+</button>

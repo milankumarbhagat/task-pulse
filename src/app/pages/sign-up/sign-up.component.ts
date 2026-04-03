@@ -14,6 +14,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { APP_CONSTANTS } from '../../core/constants/app.constants';
 
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+
 @Component({
   selector: 'app-sign-up',
   standalone: true,
@@ -21,7 +25,8 @@ import { APP_CONSTANTS } from '../../core/constants/app.constants';
     CommonModule, ReactiveFormsModule, RouterLink,
     MatInputModule, MatSelectModule, MatDatepickerModule,
     MatNativeDateModule, MatRadioModule, MatButtonModule,
-    MatIconModule, MatFormFieldModule, MatCardModule
+    MatIconModule, MatFormFieldModule, MatCardModule,
+    ButtonComponent
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
@@ -31,12 +36,18 @@ export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
-  
+  isLoading = false;
+  errorMessage = '';
+
   occupations: string[] = [
     'Software Engineer', 'Designer', 'Product Manager', 'Student', 'Other'
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
@@ -60,7 +71,7 @@ export class SignUpComponent implements OnInit {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     // If we only set errors on the child, make sure to clean them up properly when valid
     if (confirmPassword?.hasError('passwordMismatch')) {
       // Create a new error object without passwordMismatch
@@ -69,13 +80,25 @@ export class SignUpComponent implements OnInit {
       // If it's the only error, set it to null
       confirmPassword.setErrors(Object.keys(newErrors).length ? newErrors : null);
     }
-    
+
     return null;
   }
 
   onSubmit(): void {
     if (this.signUpForm.valid) {
-      console.log('Registration Data:', this.signUpForm.value);
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.authService.signUp(this.signUpForm.value).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+          this.router.navigate(['/login']);
+        },
+        error: (err: any) => {
+          this.isLoading = false;
+          console.error(err);
+          this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
+        }
+      });
     } else {
       this.signUpForm.markAllAsTouched();
     }

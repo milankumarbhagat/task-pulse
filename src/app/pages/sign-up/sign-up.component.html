@@ -6,7 +6,7 @@
     </div>
 
     <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="signup-form">
-      
+
       <div class="form-row">
         <mat-form-field appearance="outline" class="flex-1 custom-field">
           <mat-label>First Name</mat-label>
@@ -26,7 +26,9 @@
         <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
         <mat-icon matPrefix>email</mat-icon>
         <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">Required</mat-error>
-        <mat-error *ngIf="signUpForm.get('email')?.hasError('email') && !signUpForm.get('email')?.hasError('required')">Invalid email</mat-error>
+        <mat-error
+          *ngIf="signUpForm.get('email')?.hasError('email') && !signUpForm.get('email')?.hasError('required')">Invalid
+          email</mat-error>
       </mat-form-field>
 
       <div class="form-row">
@@ -70,32 +72,44 @@
         <mat-label>Password</mat-label>
         <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
         <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
+          [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
           <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Required</mat-error>
-        <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength') && !signUpForm.get('password')?.hasError('required')">Min 8 chars</mat-error>
+        <mat-error
+          *ngIf="signUpForm.get('password')?.hasError('minlength') && !signUpForm.get('password')?.hasError('required')">Min
+          8 chars</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width custom-field">
         <mat-label>Confirm Password</mat-label>
         <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword">
         <mat-icon matPrefix>lock_outline</mat-icon>
-        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
+        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button"
+          [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
           <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('required')">Required</mat-error>
-        <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</mat-error>
+        <mat-error
+          *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</mat-error>
       </mat-form-field>
 
       <div class="form-actions">
-        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="!signUpForm.valid && signUpForm.touched">
-          Create Account
-          <mat-icon iconPositionEnd>arrow_forward</mat-icon>
-        </button>
+        <div *ngIf="errorMessage" class="server-error"
+          style="color: #ef4444; text-align: center; margin-bottom: 1rem; font-weight: 500;">
+          {{errorMessage}}
+        </div>
+
+        <!-- disabled is using dynamic value so we used [] here -->
+        <task-pulse-button buttonType="submit" class="submit-btn-signup" buttonName="create-account" variant="primary"
+          [disabled]="signUpForm.invalid || isLoading" id="sign-up-btn">
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+          <mat-icon iconPositionEnd *ngIf="!isLoading">arrow_forward</mat-icon>
+        </task-pulse-button>
       </div>
     </form>
-    
+
     <div class="login-prompt">
       <p>Already have an account? <a routerLink="/login" class="login-link">Sign In</a></p>
     </div>
