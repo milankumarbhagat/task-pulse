@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "dist/task-pulse",
+  "outputDirectory": "dist/task-pulse/browser",
   "rewrites": [
     {
       "source": "/(.*)",
