@@ -3,20 +3,29 @@
     <div class="nav-brand">
       <span class="brand-text">{{appName}}</span>
     </div>
-    <div class="nav-links">
-      <a routerLink="/task" routerLinkActive="active" class="nav-item">
-        <i class="icon-task"></i>
-        <span>Tasks</span>
-      </a>
-      <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-        <i class="icon-profile"></i>
-        <span>Profile</span>
-      </a>
-    </div>
-    <div class="nav-auth">
-      <a routerLink="/login" routerLinkActive="active" class="btn-login">Login</a>
-      <a routerLink="/sign-up" routerLinkActive="active" class="btn-signup">Sign Up</a>
-    </div>
+    <ng-container *ngIf="authService.currentUser$ | async as user; else guestNav">
+      <div class="nav-links">
+        <a routerLink="/task" routerLinkActive="active" class="nav-item">
+          <i class="icon-task"></i>
+          <span>Tasks</span>
+        </a>
+        <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+          <i class="icon-profile"></i>
+          <span>Profile</span>
+        </a>
+      </div>
+      <div class="nav-auth">
+        <a href="javascript:void(0)" (click)="authService.logout(); router.navigate(['/login'])"
+          class="btn-login">Logout</a>
+      </div>
+    </ng-container>
+
+    <ng-template #guestNav>
+      <div class="nav-auth">
+        <a routerLink="/login" routerLinkActive="active" class="btn-login">Login</a>
+        <a routerLink="/sign-up" routerLinkActive="active" class="btn-signup">Sign Up</a>
+      </div>
+    </ng-template>
   </nav>
 </header>
 

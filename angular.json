@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "smart-task-manager": {
+    "task-pulse": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/smart-task-manager",
+            "outputPath": "dist/task-pulse",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -59,10 +59,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "smart-task-manager:build:production"
+              "buildTarget": "task-pulse:build:production"
             },
             "development": {
-              "buildTarget": "smart-task-manager:build:development"
+              "buildTarget": "task-pulse:build:development",
+              "port": 4300
             }
           },
           "defaultConfiguration": "development"

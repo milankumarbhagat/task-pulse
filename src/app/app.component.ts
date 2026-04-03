@@ -4,6 +4,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 
 import { APP_CONSTANTS } from './core/constants/app.constants';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,11 @@ export class AppComponent {
   private minLoaderDuration = 300; // minimum 500ms to show the beautiful loader
   private loaderStartTime = 0;
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+  constructor(
+    public router: Router,
+    private cdr: ChangeDetectorRef,
+    public authService: AuthService
+  ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.isLoading = true;

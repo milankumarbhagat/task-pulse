@@ -6,31 +6,17 @@
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <div class="input-wrapper">
-          <i class="icon-mail"></i>
-          <input type="email" id="email" formControlName="email" placeholder="name@example.com"
-            [ngClass]="{'is-invalid': isSubmitted && loginForm.get('email')?.errors}">
-        </div>
-        <div *ngIf="isSubmitted && loginForm.get('email')?.errors" class="error-message">
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</span>
-        </div>
-      </div>
+      <app-input label="Email Address" inputType="email" id="email" controlName="email" placeholder="Enter your email"
+        [isSubmitted]="isSubmitted" icon="icon-mail">
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">
+          Please enter a valid email
+        </span>
+      </app-input>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-wrapper">
-          <i class="icon-lock"></i>
-          <input type="password" id="password" formControlName="password" placeholder="••••••••"
-            [ngClass]="{'is-invalid': isSubmitted && loginForm.get('password')?.errors}">
-        </div>
-        <div *ngIf="isSubmitted && loginForm.get('password')?.errors" class="error-message">
-          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
-          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
-        </div>
-      </div>
+      <app-input label="Password" inputType="password" id="password" controlName="password"
+        placeholder="Enter your password" [isSubmitted]="isSubmitted" icon="icon-lock">
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+      </app-input>
 
       <div class="form-options">
         <label class="remember-me">
@@ -40,14 +26,21 @@
         <a href="javascript:void(0)" class="forgot-password">Forgot Password?</a>
       </div>
 
-      <button type="submit" class="btn-submit">Sign In</button>
+      <div *ngIf="errorMessage" class="error-message" style="text-align: center; margin-top: 0.5rem; font-weight: 500;">
+        {{errorMessage}}
+      </div>
+
+      <button TaskPulseButton buttonType="submit" (myClicked)="onSubmit()" label="Login" name="login-btn"
+        id="login-btn-1" class="btn-submit">
+      </button>
+
     </form>
 
     <div class="divider">
       <span>Or continue with</span>
     </div>
 
-    <button type="button" class="btn-google" (click)="loginWithGoogle()">
+    <task-pulse-button type="button" class="btn-google" (myClicked)="loginWithGoogle()">
       <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
         <path fill="#FFC107"
           d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
@@ -59,7 +52,7 @@
           d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
       </svg>
       Sign in with Google
-    </button>
+    </task-pulse-button>
 
     <p class="signup-prompt">
       Don't have an account? <a routerLink="/sign-up">Sign up</a>
