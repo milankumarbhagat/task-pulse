@@ -1,27 +1,36 @@
-<mat-form-field [appearance]="appearance" [ngClass]="classes" class="w-full">
-  <mat-label>{{ label }}</mat-label>
+<div class="form-group custom-input-wrapper" [ngClass]="classes">
+  <label [for]="id" *ngIf="label">{{ label }}</label>
 
-  <ng-container *ngIf="inputType !== 'date'">
-    <input matInput [type]="inputType === 'password' ? (hidePassword ? 'password' : 'text') : inputType" [id]="id"
-      [formControl]="control" (blur)="handleBlurEvent($event)" [placeholder]="placeholder">
-  </ng-container>
+  <div class="input-inner">
+    <span class="material-icons prefix-icon" *ngIf="icon">{{ icon }}</span>
 
-  <ng-container *ngIf="inputType === 'date'">
-    <input matInput [matDatepicker]="picker" [id]="id" [formControl]="control" 
-      (blur)="handleBlurEvent($event)" [placeholder]="placeholder">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </ng-container>
+    <ng-container *ngIf="inputType !== 'date' && inputType !== 'textarea'">
+      <input [type]="inputType === 'password' ? (hidePassword ? 'password' : 'text') : inputType" 
+        [id]="id"
+        [formControl]="control" 
+        (blur)="handleBlurEvent($event)" 
+        [placeholder]="placeholder"
+        class="custom-input"
+        [ngClass]="{'has-icon': icon}">
+    </ng-container>
 
-  <mat-icon matPrefix *ngIf="icon">{{ icon }}</mat-icon>
+    <ng-container *ngIf="inputType === 'date'">
+      <input type="date"
+        [id]="id"
+        [formControl]="control" 
+        (blur)="handleBlurEvent($event)" 
+        [placeholder]="placeholder"
+        class="custom-input"
+        [ngClass]="{'has-icon': icon}">
+    </ng-container>
 
-  <button *ngIf="inputType === 'password'" mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button"
-    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-  </button>
+    <button type="button" class="password-toggle-btn" *ngIf="inputType === 'password'" (click)="togglePasswordVisibility()" title="Toggle Password">
+      <span class="material-icons">{{hidePassword ? 'visibility_off' : 'visibility'}}</span>
+    </button>
+  </div>
 
-  <mat-error *ngIf="control?.errors && (isSubmitted || control?.touched)">
-    <span *ngIf="control?.errors?.['required']">Required</span>
+  <div class="error-message" *ngIf="control?.errors && (isSubmitted || control?.touched)">
+    <span *ngIf="control?.errors?.['required']">{{label ? label : 'This field'}} is required</span>
     <ng-content></ng-content>
-  </mat-error>
-</mat-form-field>
+  </div>
+</div>

@@ -4,8 +4,9 @@
       <h2>My Tasks</h2>
       <p>Manage your daily priorities and stay on track.</p>
     </div>
-    <task-pulse-button [label]="'+ Create Task'" name="create-task-btn" id="create-task-btn" (myClicked)="onAddTask()" class="btn-submit shrink-0" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;">
-    </task-pulse-button>
+    <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
+      <span class="material-icons" style="font-size: 28px; line-height: 1; margin-top: 5px;">add</span>
+    </button>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">

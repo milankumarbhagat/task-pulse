@@ -16,7 +16,7 @@
 }
 
 .header-content h2 {
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   font-weight: 800;
   margin: 0 0 0.5rem 0;
   color: var(--text-color, #1a1a2e);
@@ -29,7 +29,19 @@
 .header-content p {
   color: #666;
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+}
+
+.fab-create-task {
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+  color: white !important;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3) !important;
+  transition: all 0.25s ease !important;
+}
+
+.fab-create-task:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45) !important;
 }
 
 .shrink-0 {
@@ -253,6 +265,11 @@
 
 /* Removed task-actions */
 
+.create-task-btn {
+  width: auto;
+  display: inline-block;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -263,13 +280,38 @@
 }
 
 @media (max-width: 768px) {
-  .task-page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+  .task-page-container {
+    padding: 0 1rem; /* Restored bounding box isolated to tasks */
   }
-  
+
+  .task-page-header {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .header-content {
+    display: none;
+  }
+
+  .fab-create-task {
+    position: fixed !important;
+    bottom: 2rem;
+    right: 1.5rem;
+    z-index: 1000;
+  }
+
   .task-grid {
     grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .task-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .task-title {
+    font-size: 1.25rem;
   }
 }

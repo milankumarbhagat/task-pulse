@@ -29,7 +29,23 @@ export class TaskListComponent implements OnInit {
     this.isLoading = true;
     this.taskService.getTasks().subscribe({
       next: (tasks) => {
-        this.tasks = tasks;
+        const priorityWeight = { 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1 };
+        
+        this.tasks = tasks.sort((a, b) => {
+          const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+          const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+          
+          // 1. Sort by Due Date (earliest earliest)
+          if (dateA !== dateB) {
+            return dateA - dateB;
+          }
+          
+          // 2. Sort by Priority (HIGH > MEDIUM > LOW)
+          const weightA = priorityWeight[a.priority as keyof typeof priorityWeight] || 0;
+          const weightB = priorityWeight[b.priority as keyof typeof priorityWeight] || 0;
+          
+          return weightB - weightA;
+        });
         this.isLoading = false;
       },
       error: (error) => {
