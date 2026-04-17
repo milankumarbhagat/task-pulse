@@ -70,8 +70,8 @@
         <button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="isLoading">
           Cancel
         </button>
-        <button TaskPulseButton buttonType="submit" [label]="isEditMode ? 'Update Task' : 'Create Task'" name="save-btn" id="save-btn" class="btn-submit">
-        </button>
+        <task-pulse-button buttonType="submit" [label]="isEditMode ? 'Update Task' : 'Create Task'" name="save-btn" id="save-btn" class="btn-submit" style="display: inline-block;">
+        </task-pulse-button>
       </div>
 
     </form>

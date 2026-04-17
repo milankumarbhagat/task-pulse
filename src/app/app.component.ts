@@ -25,7 +25,9 @@ export class AppComponent {
     public authService: AuthService
   ) {
     this.router.events.subscribe(event => {
+      // Close mobile menu on any navigation
       if (event instanceof NavigationStart) {
+        this.closeMobileMenu();
         this.isLoading = true;
         this.loaderStartTime = Date.now();
         this.cdr.detectChanges(); // Force view update immediately
@@ -45,5 +47,17 @@ export class AppComponent {
         }, timeRemaining);
       }
     });
+  }
+
+  isMobileMenuOpen = false;
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
   }
 }
