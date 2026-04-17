@@ -1,5 +1,7 @@
-.input-wrapper1 {
-    position: relative;
-    display: flex;
-    align-items: center;
+:host {
+  display: block;
+}
+
+mat-form-field {
+  width: 100%;
 }

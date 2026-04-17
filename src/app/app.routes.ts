@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth.guard';
+import { authGuard } from './core/guards/auth/auth.guard';
+import { redirectAuthGuard } from './core/guards/redirect-auth.guard';
 
 export const routes: Routes = [
     {
         path: 'profile',
         loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
-        canActivate: [authGuard]
+        canActivate: [authGuard] // check if user is authenticated
     },
     // Use lazy loading for multiple related screens/routes
     {
@@ -16,11 +17,13 @@ export const routes: Routes = [
     // Use lazy loading for single screen
     {
         path: 'login',
-        loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
+        canActivate: [redirectAuthGuard]
     },
     {
         path: 'sign-up',
-        loadComponent: () => import('./pages/sign-up/sign-up.component').then(m => m.SignUpComponent)
+        loadComponent: () => import('./pages/sign-up/sign-up.component').then(m => m.SignUpComponent),
+        canActivate: [redirectAuthGuard]
     },
     {
         path: '',

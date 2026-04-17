@@ -8,36 +8,26 @@
     <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="signup-form">
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="flex-1 custom-field">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" placeholder="John">
-          <mat-icon matPrefix>person</mat-icon>
-          <mat-error *ngIf="signUpForm.get('firstName')?.hasError('required')">Required</mat-error>
-        </mat-form-field>
+        <app-input class="flex-1" label="First Name" controlName="firstName" id="firstName" placeholder="John"
+          icon="person" classes="custom-field"></app-input>
 
-        <mat-form-field appearance="outline" class="flex-1 custom-field">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" placeholder="Doe">
-        </mat-form-field>
+        <app-input class="flex-1" label="Last Name" controlName="lastName" id="lastName" placeholder="Doe"
+          classes="custom-field"></app-input>
       </div>
 
-      <mat-form-field appearance="outline" class="full-width custom-field">
-        <mat-label>Email Address</mat-label>
-        <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
-        <mat-icon matPrefix>email</mat-icon>
-        <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">Required</mat-error>
-        <mat-error
+      <app-input class="full-width" label="Email Address" inputType="email" controlName="email" id="email"
+        placeholder="john.doe@example.com" icon="email" classes="custom-field" (blurEvent)="verifyEmail()">
+        <span
           *ngIf="signUpForm.get('email')?.hasError('email') && !signUpForm.get('email')?.hasError('required')">Invalid
-          email</mat-error>
-      </mat-form-field>
+          email</span>
+        <span *ngIf="signUpForm.get('email')?.hasError('emailExists')">Email already exists</span>
+      </app-input>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="flex-1 custom-field">
-          <mat-label>Phone Number</mat-label>
-          <input matInput type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
-          <mat-icon matPrefix>phone</mat-icon>
-          <mat-error *ngIf="signUpForm.get('phone')?.hasError('pattern')">Invalid phone</mat-error>
-        </mat-form-field>
+        <app-input class="flex-1" label="Phone Number" inputType="tel" controlName="phone" id="phone"
+          placeholder="+1 (555) 000-0000" icon="phone" classes="custom-field">
+          <span *ngIf="signUpForm.get('phone')?.hasError('pattern')">Invalid phone</span>
+        </app-input>
 
         <mat-form-field appearance="outline" class="flex-1 custom-field">
           <mat-label>Date of Birth</mat-label>
@@ -68,32 +58,18 @@
         </mat-form-field>
       </div>
 
-      <mat-form-field appearance="outline" class="full-width mt-2 custom-field">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
-        <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
-          [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Required</mat-error>
-        <mat-error
+      <app-input class="full-width mt-2" label="Password" inputType="password" controlName="password" id="password"
+        icon="lock" classes="custom-field">
+        <span
           *ngIf="signUpForm.get('password')?.hasError('minlength') && !signUpForm.get('password')?.hasError('required')">Min
-          8 chars</mat-error>
-      </mat-form-field>
+          8 chars</span>
+      </app-input>
 
-      <mat-form-field appearance="outline" class="full-width custom-field">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword">
-        <mat-icon matPrefix>lock_outline</mat-icon>
-        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button"
-          [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
-          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('required')">Required</mat-error>
-        <mat-error
-          *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</mat-error>
-      </mat-form-field>
+      <app-input class="full-width" label="Confirm Password" inputType="password" controlName="confirmPassword"
+        id="confirmPassword" icon="lock_outline" classes="custom-field">
+        <span
+          *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</span>
+      </app-input>
 
       <div class="form-actions">
         <div *ngIf="errorMessage" class="server-error"
@@ -102,7 +78,8 @@
         </div>
 
         <!-- disabled is using dynamic value so we used [] here -->
-        <task-pulse-button buttonType="submit" class="submit-btn-signup" buttonName="create-account" variant="primary"
+        <task-pulse-button buttonType="submit" class="submit-btn-signup" buttonName="create-account"
+          [variant]="(signUpForm.invalid || isLoading) ? 'secondary' : 'primary'"
           [disabled]="signUpForm.invalid || isLoading" id="sign-up-btn">
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
           <mat-icon iconPositionEnd *ngIf="!isLoading">arrow_forward</mat-icon>
@@ -111,7 +88,8 @@
     </form>
 
     <div class="login-prompt">
-      <p>Already have an account? <a routerLink="/login" class="login-link">Sign In</a></p>
+      <p>Already have an account? <a routerLink="/login" class="login-link">Sign In -- {{isLoading ? 'yes Logout' : 'not
+          L'}} {{signUpForm.invalid ? 'In' : 'Not IN'}}</a></p>
     </div>
   </div>
 </div>

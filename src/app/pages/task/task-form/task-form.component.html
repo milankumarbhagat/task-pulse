@@ -1,0 +1,79 @@
+<div class="task-form-container">
+  <div class="task-form-card">
+    <div class="task-form-header">
+      <h2>{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h2>
+      <p>{{ isEditMode ? 'Update your task details below' : 'Fill in the details to create a new task' }}</p>
+    </div>
+
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+      
+      <!-- Title -->
+      <app-input label="Title" inputType="text" id="title" controlName="title" placeholder="Task title"
+        [isSubmitted]="isSubmitted" icon="title">
+        <span *ngIf="taskForm.get('title')?.errors?.['required']">Title is required</span>
+        <span *ngIf="taskForm.get('title')?.errors?.['maxlength']">Title cannot exceed 100 characters</span>
+      </app-input>
+
+      <!-- Description -->
+      <div class="form-group custom-textarea-wrapper">
+        <label for="description">Description <span class="required">*</span></label>
+        <textarea id="description" formControlName="description" class="custom-textarea" rows="4" placeholder="Task description..."></textarea>
+        <div class="error-text" *ngIf="isSubmitted && taskForm.get('description')?.errors?.['required']">
+          Description is required
+        </div>
+      </div>
+
+      <!-- Due Date -->
+      <app-input label="Due Date" inputType="date" id="dueDate" controlName="dueDate" placeholder="Select due date"
+        [isSubmitted]="isSubmitted">
+        <span *ngIf="taskForm.get('dueDate')?.errors?.['required']">Due Date is required</span>
+      </app-input>
+
+      <div *ngIf="taskForm.get('dueDate')?.value" class="date-preview" style="margin-top: -10px; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; color: #666; margin-right: 8px;">Status Preview:</span>
+        <app-due-date-badge [dueDate]="taskForm.get('dueDate')?.value"></app-due-date-badge>
+      </div>
+
+      <div class="row">
+        <!-- Status -->
+        <div class="form-group select-wrapper">
+          <label for="status">Status <span class="required">*</span></label>
+          <select id="status" formControlName="status" class="custom-select">
+            <option value="PENDING">Pending</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+          <div class="error-text" *ngIf="isSubmitted && taskForm.get('status')?.errors?.['required']">
+            Status is required
+          </div>
+        </div>
+
+        <!-- Priority -->
+        <div class="form-group select-wrapper">
+          <label for="priority">Priority <span class="required">*</span></label>
+          <select id="priority" formControlName="priority" class="custom-select">
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+          </select>
+          <div class="error-text" *ngIf="isSubmitted && taskForm.get('priority')?.errors?.['required']">
+            Priority is required
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{errorMessage}}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+          Cancel
+        </button>
+        <button TaskPulseButton buttonType="submit" [label]="isEditMode ? 'Update Task' : 'Create Task'" name="save-btn" id="save-btn" class="btn-submit">
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

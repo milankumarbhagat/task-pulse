@@ -17,6 +17,7 @@ import { APP_CONSTANTS } from '../../core/constants/app.constants';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { InputComponent } from '../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -26,7 +27,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
     MatInputModule, MatSelectModule, MatDatepickerModule,
     MatNativeDateModule, MatRadioModule, MatButtonModule,
     MatIconModule, MatFormFieldModule, MatCardModule,
-    ButtonComponent
+    ButtonComponent, InputComponent
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
@@ -34,8 +35,6 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 export class SignUpComponent implements OnInit {
   appName = APP_CONSTANTS.APP_NAME;
   signUpForm!: FormGroup;
-  hidePassword = true;
-  hideConfirmPassword = true;
   isLoading = false;
   errorMessage = '';
 
@@ -103,4 +102,23 @@ export class SignUpComponent implements OnInit {
       this.signUpForm.markAllAsTouched();
     }
   }
+
+  verifyEmail() {
+    const invaildEmail = this.signUpForm.get('email')?.hasError('email');
+    if (!invaildEmail) {
+      // verfiy if the eamil already exists in database
+      this.authService.checkEmail(this.signUpForm.get('email')?.value).subscribe({
+        next: (res) => {
+          if (res) {
+            this.signUpForm.get('email')?.setErrors({ emailExists: true });
+          }
+        },
+        error: (err: any) => {
+          console.log("\n\n email already error ==> ", err)
+          //TODO: show error message in a snackbar
+        }
+      })
+    }
+  }
+
 }

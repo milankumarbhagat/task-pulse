@@ -6,6 +6,7 @@ import { APP_CONSTANTS } from '../../core/constants/app.constants';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private _notification: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -41,20 +43,21 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       this.errorMessage = '';
       this.authService.login(this.loginForm.value).subscribe({
-        next: (res: any) => {
+        next: (_res) => {
           this.isLoading = false;
           this.router.navigate(['/task']);
+          this._notification.success('Login successful!!', 1000);
         },
         error: (err: any) => {
           this.isLoading = false;
           console.error(err);
-          this.errorMessage = err.error?.error || 'Invalid email or password';
+          this._notification.error('Invalid email or password!!');
         }
       });
     }
   }
 
   loginWithGoogle(): void {
-    console.log('Login with Google clicked');
+    this._notification.success('Login with Google clicked');
   }
 }
