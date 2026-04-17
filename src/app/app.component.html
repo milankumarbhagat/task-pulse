@@ -6,17 +6,20 @@
     <ng-container *ngIf="authService.currentUser$ | async as user; else guestNav">
       <div class="nav-links">
         <a routerLink="/task" routerLinkActive="active" class="nav-item">
-          <i class="icon-task"></i>
-          <span>Tasks</span>
+          <span class="material-icons">task_alt</span>
+          <span class="nav-text">Tasks</span>
         </a>
         <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-          <i class="icon-profile"></i>
-          <span>Profile</span>
+          <span class="material-icons">person</span>
+          <span class="nav-text">Profile</span>
         </a>
       </div>
       <div class="nav-auth">
         <a href="javascript:void(0)" (click)="authService.logout(); router.navigate(['/login'])"
-          class="btn-login">Logout</a>
+          class="btn-logout">
+          <span class="material-icons" style="font-size: 18px; margin-right: 4px; vertical-align: middle;">logout</span>
+          <span style="vertical-align: middle;">Logout</span>
+        </a>
       </div>
     </ng-container>
 

@@ -4,8 +4,8 @@
       <h2>My Tasks</h2>
       <p>Manage your daily priorities and stay on track.</p>
     </div>
-    <button TaskPulseButton [label]="'+ Create Task'" name="create-task-btn" id="create-task-btn" (myClicked)="onAddTask()" class="btn-submit shrink-0" style="width: auto; padding: 0.75rem 1.5rem;">
-    </button>
+    <task-pulse-button [label]="'+ Create Task'" name="create-task-btn" id="create-task-btn" (myClicked)="onAddTask()" class="btn-submit shrink-0" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;">
+    </task-pulse-button>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">
@@ -19,7 +19,7 @@
     </div>
     <h3>No tasks found</h3>
     <p>You don't have any tasks right now. Create one to get started!</p>
-    <button TaskPulseButton [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.75rem 1.5rem;"></button>
+    <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
   </div>
 
   <div *ngIf="!isLoading && tasks.length > 0" class="task-grid">
