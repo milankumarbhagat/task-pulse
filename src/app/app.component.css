@@ -1,7 +1,8 @@
-/* Navbar Styling */
 .app-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
@@ -145,7 +146,7 @@
 }
 
 .main-content {
-  padding: 2rem;
+  padding: 6rem 2rem 2rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -202,24 +203,121 @@
   to { opacity: 1; }
 }
 
+/* Nav Container - dictates layout for Desktop vs Mobile */
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4e4376;
+  padding: 0.5rem;
+  z-index: 2001; /* Must stay above sidebar */
+}
+
+.mobile-menu-btn .material-icons {
+  font-size: 28px;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
 @media (max-width: 768px) {
-  .nav-text {
-    display: none;
+  .navbar {
+    padding: 0.8rem 1.2rem;
   }
-  .nav-links {
+  
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1005;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-container {
+    position: fixed;
+    top: 0;
+    right: -280px; /* Hidden off canvas */
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 5rem 2rem 2rem 2rem;
+    gap: 2rem;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1010;
+  }
+
+  .nav-container.open {
+    right: 0;
+  }
+
+  .nav-links, .nav-auth {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
     gap: 1.5rem;
   }
-  .btn-logout span:last-child {
-    display: none;
+
+  .nav-item {
+    width: 100%;
+    padding: 0.8rem 0;
+    font-size: 1.1rem;
   }
-  .btn-logout .material-icons {
-    margin-right: 0 !important;
+
+  .nav-item::after {
+    left: 0;
+    transform: none;
   }
+  
+  .nav-item:hover::after,
+  .nav-item.active::after {
+    width: 50px;
+  }
+
   .btn-logout {
-    padding: 0.6rem;
-    border-radius: 50%;
+    border-radius: 9999px;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    justify-content: flex-start;
   }
-  .navbar {
-    padding: 1rem;
+  
+  .btn-logout .material-icons {
+    margin-right: 8px !important;
+  }
+
+  .main-content {
+    padding: 5rem 0.5rem 0 0.5rem;
   }
 }
