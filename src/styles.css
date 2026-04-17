@@ -321,11 +321,27 @@ body {
 }
 
 @media (max-width: 640px) {
+  .login-container {
+    padding: 0;
+    min-height: calc(100vh - 80px); /* Fill the viewport minus header */
+    align-items: stretch; /* Force child card to natively stretch full height */
+  }
+
   .login-card {
-    padding: 2.5rem 2rem;
+    padding: 2rem 1.5rem;
+    border-radius: 0; /* Remove rounded corners to flush with screen edges */
+    border: none;
+    box-shadow: none; /* Strip shadow since it occupies 100% width/height */
+    margin: 0;
+    flex: 1; /* Stretch to fill container vertically if needed */
   }
 
   .login-header h2 {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
+  }
+  
+  .form-options {
+    flex-wrap: wrap; /* Prevent remember me and forgot password from crashing horizontally */
+    gap: 1rem;
   }
 }
