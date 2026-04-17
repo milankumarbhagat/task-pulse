@@ -7,14 +7,14 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <app-input label="Email Address" inputType="email" id="email" controlName="email" placeholder="Enter your email"
-        [isSubmitted]="isSubmitted" icon="icon-mail">
+        [isSubmitted]="isSubmitted" icon="email">
         <span *ngIf="loginForm.get('email')?.errors?.['email']">
           Please enter a valid email
         </span>
       </app-input>
 
       <app-input label="Password" inputType="password" id="password" controlName="password"
-        placeholder="Enter your password" [isSubmitted]="isSubmitted" icon="icon-lock">
+        placeholder="Enter your password" [isSubmitted]="isSubmitted" icon="lock">
         <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
       </app-input>
 

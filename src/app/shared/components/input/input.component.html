@@ -1,27 +1,27 @@
-<div class="form-group">
+<mat-form-field [appearance]="appearance" [ngClass]="classes" class="w-full">
+  <mat-label>{{ label }}</mat-label>
 
-    <label [for]="id">{{ label }}</label>
+  <ng-container *ngIf="inputType !== 'date'">
+    <input matInput [type]="inputType === 'password' ? (hidePassword ? 'password' : 'text') : inputType" [id]="id"
+      [formControl]="control" (blur)="handleBlurEvent($event)" [placeholder]="placeholder">
+  </ng-container>
 
-    <div class="input-wrapper">
+  <ng-container *ngIf="inputType === 'date'">
+    <input matInput [matDatepicker]="picker" [id]="id" [formControl]="control" 
+      (blur)="handleBlurEvent($event)" [placeholder]="placeholder">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </ng-container>
 
-        <!-- Icon -->
-        <i *ngIf="icon" [class]="icon"></i>
+  <mat-icon matPrefix *ngIf="icon">{{ icon }}</mat-icon>
 
-        <!-- Input -->
-        <input [type]="inputType" [id]="id" [formControl]="control" [placeholder]="placeholder" [ngClass]="{
-        'is-invalid': isSubmitted && control?.errors
-      }" />
+  <button *ngIf="inputType === 'password'" mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button"
+    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+  </button>
 
-    </div>
-
-    <!-- Error Messages -->
-    <div *ngIf="isSubmitted && control?.errors" class="error-message">
-
-        <span *ngIf="control?.errors?.['required']">
-            {{ label }} is required
-        </span>
-        <ng-content></ng-content>
-
-    </div>
-
-</div>
+  <mat-error *ngIf="control?.errors && (isSubmitted || control?.touched)">
+    <span *ngIf="control?.errors?.['required']">Required</span>
+    <ng-content></ng-content>
+  </mat-error>
+</mat-form-field>

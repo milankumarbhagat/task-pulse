@@ -1,0 +1,50 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Statuses */
+.overdue {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+.overdue .badge-dot {
+  background-color: #ef4444;
+}
+
+.due-today {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+.due-today .badge-dot {
+  background-color: #f59e0b;
+}
+
+.due-soon {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+.due-soon .badge-dot {
+  background-color: #3b82f6;
+}
+
+.on-track {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+.on-track .badge-dot {
+  background-color: #22c55e;
+}

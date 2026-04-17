@@ -1,1 +1,72 @@
-<p>task-list works!</p>
+<div class="task-page-container">
+  <div class="task-page-header">
+    <div class="header-content">
+      <h2>My Tasks</h2>
+      <p>Manage your daily priorities and stay on track.</p>
+    </div>
+    <button TaskPulseButton [label]="'+ Create Task'" name="create-task-btn" id="create-task-btn" (myClicked)="onAddTask()" class="btn-submit shrink-0" style="width: auto; padding: 0.75rem 1.5rem;">
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your tasks...</p>
+  </div>
+
+  <div *ngIf="!isLoading && tasks.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <span class="material-icons">fact_check</span>
+    </div>
+    <h3>No tasks found</h3>
+    <p>You don't have any tasks right now. Create one to get started!</p>
+    <button TaskPulseButton [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.75rem 1.5rem;"></button>
+  </div>
+
+  <div *ngIf="!isLoading && tasks.length > 0" class="task-grid">
+    <div class="task-card" *ngFor="let task of tasks">
+      <div class="task-card-header">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <span class="badge priority-badge" [ngClass]="getPriorityClass(task.priority)">
+            <span class="material-icons priority-icon">
+              {{ task.priority === 'HIGH' ? 'keyboard_double_arrow_up' : task.priority === 'MEDIUM' ? 'drag_handle' : 'keyboard_double_arrow_down' }}
+            </span>
+            {{ task.priority | titlecase }}
+          </span>
+          
+          <span class="badge status-badge" [ngClass]="getStatusClass(task.status)">
+            {{ task.status === 'IN_PROGRESS' ? 'In Progress' : task.status | titlecase }}
+          </span>
+        </div>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
+          <span class="material-icons" style="font-size: 20px;">more_vert</span>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
+          <button mat-menu-item (click)="onEditTask(task.id)">
+            <span class="material-icons" style="margin-right: 8px; font-size: 20px; vertical-align: middle;">edit</span>
+            <span style="font-weight: 500;">Edit</span>
+          </button>
+          <button mat-menu-item (click)="onCloneTask(task)">
+            <span class="material-icons" style="margin-right: 8px; font-size: 20px; vertical-align: middle;">content_copy</span>
+            <span style="font-weight: 500;">Clone</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteTask(task.id)" style="color: #fa5252;">
+            <span class="material-icons" style="margin-right: 8px; color: #fa5252; font-size: 20px; vertical-align: middle;">delete</span>
+            <span style="font-weight: 500;">Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <div class="task-card-body">
+        <h3 class="task-title" [title]="task.title">{{ task.title }}</h3>
+        <p class="task-desc">{{ task.description }}</p>
+      </div>
+
+      <div class="task-card-footer">
+        <div class="due-date-wrapper">
+          <app-due-date-badge [dueDate]="task.dueDate"></app-due-date-badge>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

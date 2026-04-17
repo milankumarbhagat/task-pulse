@@ -268,6 +268,37 @@ body {
   text-decoration: underline;
 }
 
+/* Snackbar styles */
+.success-snackbar .mdc-snackbar__surface {
+  background-color: #4caf50 !important;
+  color: white !important;
+  border-radius: 24px !important;
+}
+
+.success-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+.error-snackbar .mdc-snackbar__surface {
+  background-color: #b5043f !important;
+  color: white !important;
+  border-radius: 24px !important;
+}
+
+.error-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+.warning-snackbar .mdc-snackbar__surface {
+  background-color: #ff9800 !important;
+  color: white !important;
+  border-radius: 24px !important;
+}
+
+.warning-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;

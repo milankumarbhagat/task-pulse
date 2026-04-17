@@ -1,1 +1,64 @@
-<p>profile works!</p>
+<div class="profile-container">
+    <div class="profile-card">
+
+        <div class="avatar-wrapper">
+            <div class="avatar">
+                <!-- Dummy user icon -->
+                <svg fill="currentColor" viewBox="0 0 24 24" style="width: 50px; height: 50px;">
+                    <path
+                        d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="profile-header">
+            <h2>Your Profile</h2>
+            <p>Manage your account settings and personal information</p>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="profile-form-grid">
+
+                <app-input label="First Name" inputType="text" name="firstName" controlName="firstName"
+                    placeholder="First name" icon="person">
+                </app-input>
+
+                <app-input label="Last Name" inputType="text" name="lastName" controlName="lastName"
+                    placeholder="Last name" icon="person_outline">
+                </app-input>
+
+                <div class="full-width">
+                    <app-input label="Email address" inputType="email" name="email" controlName="email"
+                        placeholder="Email address" icon="email">
+                    </app-input>
+                    <!-- <span
+                        style="font-size: 0.8rem; color: #6b7280; margin-top: -10px; display: block; padding-left: 1rem;">Email
+                        cannot be changed.</span> -->
+                </div>
+
+                <app-input label="Phone Number" inputType="tel" name="phone" controlName="phone"
+                    placeholder="9588996621" icon="phone">
+                </app-input>
+
+                <app-input label="Gender" inputType="text" name="gender" controlName="gender"
+                    placeholder="e.g. Male boundaries" icon="wc">
+                </app-input>
+
+                <app-input label="Date of Birth" inputType="date" name="dob" controlName="dob" placeholder=""
+                    icon="cake">
+                </app-input>
+
+                <app-input label="Occupation" inputType="text" name="occupation" controlName="occupation"
+                    placeholder="e.g. Software Engineer" icon="work">
+                </app-input>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-submit" [disabled]="isLoading || profileForm.invalid">
+                    {{ isLoading ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
