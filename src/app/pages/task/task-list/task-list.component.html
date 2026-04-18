@@ -23,10 +23,46 @@
     <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
   </div>
 
-  <div *ngIf="!isLoading && tasks.length > 0" class="task-grid">
-    <div class="task-card" *ngFor="let task of tasks">
+  <div *ngIf="!isLoading && tasks.length > 0" class="filter-dashboard">
+    <div class="search-box">
+      <span class="material-icons search-icon">search</span>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks..." class="filter-input">
+    </div>
+    <div class="filter-selects">
+      <select [(ngModel)]="selectedStatus" class="filter-select">
+        <option value="">All Statuses</option>
+        <option value="PENDING">Pending</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+      </select>
+      <select [(ngModel)]="selectedPriority" class="filter-select">
+        <option value="">All Priorities</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredTasks.length === 0 && tasks.length > 0" class="empty-state">
+    <div class="empty-icon">
+      <span class="material-icons">search_off</span>
+    </div>
+    <h3>No matches found</h3>
+    <p>Try clearing your search query or adjusting your filters.</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredTasks.length > 0" class="task-grid">
+    <div class="task-card" *ngFor="let task of filteredTasks">
       <div class="task-card-header">
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button 
+          title="Mark as Completed"
+          class="btn-complete-toggle" 
+          [class.completed]="task.status === 'COMPLETED'" 
+          (click)="markComplete(task)">
+          <span class="material-icons">{{ task.status === 'COMPLETED' ? 'check_circle' : 'radio_button_unchecked' }}</span>
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-right: auto; align-items: center;">
           <span class="badge priority-badge" [ngClass]="getPriorityClass(task.priority)">
             <span class="material-icons priority-icon">
               {{ task.priority === 'HIGH' ? 'keyboard_double_arrow_up' : task.priority === 'MEDIUM' ? 'drag_handle' : 'keyboard_double_arrow_down' }}

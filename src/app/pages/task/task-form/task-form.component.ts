@@ -46,9 +46,10 @@ export class TaskFormComponent implements OnInit {
           title: `${clone.title} (Clone)`,
           description: clone.description,
           status: clone.status,
-          dueDate: clone.dueDate,
+          dueDate: this.formatDateForInput(clone.dueDate),
           priority: clone.priority
         });
+        this.checkAndDisableDueDate();
       }
     }
   }
@@ -71,9 +72,10 @@ export class TaskFormComponent implements OnInit {
           title: task.title,
           description: task.description,
           status: task.status,
-          dueDate: task.dueDate,
+          dueDate: this.formatDateForInput(task.dueDate),
           priority: task.priority
         });
+        this.checkAndDisableDueDate();
         this.isLoading = false;
       },
       error: (err) => {
@@ -82,6 +84,32 @@ export class TaskFormComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private checkAndDisableDueDate(): void {
+    if (this.isEditMode) {
+      const dueDateValue = this.taskForm.get('dueDate')?.value;
+      if (dueDateValue) {
+        const todayStr = this.formatDateForInput(new Date());
+        // If the task is already overdue or due today, lock it.
+        if (dueDateValue <= todayStr) {
+          this.taskForm.get('dueDate')?.disable();
+        } else {
+          // If it's a future task, keep it unlocked so they can still see the calendar!
+          this.taskForm.get('dueDate')?.enable();
+        }
+      }
+    }
+  }
+
+  private formatDateForInput(dateString: string | Date | undefined): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onSubmit(): void {
@@ -96,7 +124,7 @@ export class TaskFormComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
-    const taskData: Task = this.taskForm.value;
+    const taskData: Task = this.taskForm.getRawValue();
 
     if (this.isEditMode) {
       this.taskService.updateTask(this.taskId!, taskData).subscribe({
