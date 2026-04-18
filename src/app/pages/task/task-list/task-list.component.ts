@@ -23,6 +23,7 @@ export class TaskListComponent implements OnInit {
   searchQuery: string = '';
   selectedStatus: string = '';
   selectedPriority: string = '';
+  showFilters: boolean = false;
 
   get filteredTasks(): Task[] {
     return this.tasks.filter(task => {
