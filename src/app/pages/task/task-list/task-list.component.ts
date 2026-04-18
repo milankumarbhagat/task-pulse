@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,13 +12,27 @@ import { DueDateBadgeComponent } from '../../../shared/components/due-date-badge
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, MatMenuModule, MatButtonModule, ButtonComponent, DueDateBadgeComponent],
+  imports: [CommonModule, FormsModule, MatMenuModule, MatButtonModule, ButtonComponent, DueDateBadgeComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css'
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
   isLoading = true;
+
+  searchQuery: string = '';
+  selectedStatus: string = '';
+  selectedPriority: string = '';
+
+  get filteredTasks(): Task[] {
+    return this.tasks.filter(task => {
+      const matchSearch = task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+                          (task.description && task.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
+      const matchStatus = this.selectedStatus ? task.status === this.selectedStatus : true;
+      const matchPriority = this.selectedPriority ? task.priority === this.selectedPriority : true;
+      return matchSearch && matchStatus && matchPriority;
+    });
+  }
 
   constructor(private taskService: TaskService, private router: Router) {}
 
@@ -78,6 +93,17 @@ export class TaskListComponent implements OnInit {
         error: (error) => console.error('Error deleting task', error)
       });
     }
+  }
+
+  markComplete(task: Task): void {
+    if (task.status === 'COMPLETED') return;
+    const updatedTask = { ...task, status: 'COMPLETED' as any };
+    this.taskService.updateTask(task.id!, updatedTask).subscribe({
+      next: () => {
+        task.status = 'COMPLETED';
+      },
+      error: (error) => console.error('Error marking task as complete', error)
+    });
   }
 
   getStatusClass(status: string): string {
