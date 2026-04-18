@@ -4,9 +4,14 @@
       <h2>My Tasks</h2>
       <p>Manage your daily priorities and stay on track.</p>
     </div>
-    <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
-      <span class="material-icons" style="font-size: 28px; line-height: 1; margin-top: 5px;">add</span>
-    </button>
+    <div class="header-actions">
+      <button class="filter-toggle-btn shrink-0" (click)="showFilters = !showFilters" [class.active-filter]="showFilters || searchQuery || selectedStatus || selectedPriority" title="Toggle Filters">
+        <span class="material-icons">{{ showFilters ? 'close' : 'tune' }}</span>
+      </button>
+      <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
+        <span class="material-icons" style="font-size: 28px; line-height: 1; margin-top: 5px;">add</span>
+      </button>
+    </div>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">
@@ -23,7 +28,7 @@
     <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
   </div>
 
-  <div *ngIf="!isLoading && tasks.length > 0" class="filter-dashboard">
+  <div *ngIf="!isLoading && tasks.length > 0 && showFilters" class="filter-dashboard">
     <div class="search-box">
       <span class="material-icons search-icon">search</span>
       <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks..." class="filter-input">
