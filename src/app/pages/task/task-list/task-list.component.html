@@ -5,7 +5,9 @@
       <p>Manage your daily priorities and stay on track.</p>
     </div>
     <div class="header-actions">
-      <button class="filter-toggle-btn shrink-0" (click)="showFilters = !showFilters" [class.active-filter]="showFilters || searchQuery || selectedStatus || selectedPriority" title="Toggle Filters">
+      <button class="filter-toggle-btn shrink-0" (click)="showFilters = !showFilters"
+        [class.active-filter]="showFilters || searchQuery || selectedStatuses.length > 0 || selectedPriorities.length > 0"
+        title="Toggle Filters">
         <span class="material-icons">{{ showFilters ? 'close' : 'tune' }}</span>
       </button>
       <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
@@ -25,7 +27,8 @@
     </div>
     <h3>No tasks found</h3>
     <p>You don't have any tasks right now. Create one to get started!</p>
-    <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()" class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
+    <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()"
+      class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
   </div>
 
   <div *ngIf="!isLoading && tasks.length > 0 && showFilters" class="filter-dashboard">
@@ -34,18 +37,42 @@
       <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks..." class="filter-input">
     </div>
     <div class="filter-selects">
-      <select [(ngModel)]="selectedStatus" class="filter-select">
-        <option value="">All Statuses</option>
-        <option value="PENDING">Pending</option>
-        <option value="IN_PROGRESS">In Progress</option>
-        <option value="COMPLETED">Completed</option>
-      </select>
-      <select [(ngModel)]="selectedPriority" class="filter-select">
-        <option value="">All Priorities</option>
-        <option value="HIGH">High</option>
-        <option value="MEDIUM">Medium</option>
-        <option value="LOW">Low</option>
-      </select>
+      <div class="status-checkbox-group">
+        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.TODO)">
+          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)" (change)="toggleStatus(TaskStatus.TODO)">
+          <span class="material-icons">list_alt</span>
+          To Do
+        </label>
+        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
+          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
+            (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
+          <span class="material-icons">sync</span>
+          In Progress
+        </label>
+        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
+          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
+            (change)="toggleStatus(TaskStatus.COMPLETED)">
+          <span class="material-icons">check_circle</span>
+          Completed
+        </label>
+      </div>
+      <div class="priority-checkbox-group">
+        <label class="priority-checkbox high" [class.active]="isPrioritySelected('HIGH')">
+          <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
+          <span class="material-icons">keyboard_double_arrow_up</span>
+          High
+        </label>
+        <label class="priority-checkbox medium" [class.active]="isPrioritySelected('MEDIUM')">
+          <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
+          <span class="material-icons">drag_handle</span>
+          Medium
+        </label>
+        <label class="priority-checkbox low" [class.active]="isPrioritySelected('LOW')">
+          <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
+          <span class="material-icons">keyboard_double_arrow_down</span>
+          Low
+        </label>
+      </div>
     </div>
   </div>
 
@@ -60,27 +87,23 @@
   <div *ngIf="!isLoading && filteredTasks.length > 0" class="task-grid">
     <div class="task-card" *ngFor="let task of filteredTasks">
       <div class="task-card-header">
-        <button 
-          title="Mark as Completed"
-          class="btn-complete-toggle" 
-          [class.completed]="task.status === 'COMPLETED'" 
-          (click)="markComplete(task)">
-          <span class="material-icons">{{ task.status === 'COMPLETED' ? 'check_circle' : 'radio_button_unchecked' }}</span>
-        </button>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-right: auto; align-items: center;">
           <span class="badge priority-badge" [ngClass]="getPriorityClass(task.priority)">
             <span class="material-icons priority-icon">
-              {{ task.priority === 'HIGH' ? 'keyboard_double_arrow_up' : task.priority === 'MEDIUM' ? 'drag_handle' : 'keyboard_double_arrow_down' }}
+              {{ task.priority === 'HIGH' ? 'keyboard_double_arrow_up' : task.priority === 'MEDIUM' ? 'drag_handle' :
+              'keyboard_double_arrow_down' }}
             </span>
             {{ task.priority | titlecase }}
           </span>
-          
+
           <span class="badge status-badge" [ngClass]="getStatusClass(task.status)">
-            {{ task.status === 'IN_PROGRESS' ? 'In Progress' : task.status | titlecase }}
+            {{ task.status === 'IN_PROGRESS' ? 'In Progress' : task.status === 'TODO' ? 'To Do' : task.status |
+            titlecase }}
           </span>
         </div>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn"
+          style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
           <span class="material-icons" style="font-size: 20px;">more_vert</span>
         </button>
         <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
@@ -89,11 +112,13 @@
             <span style="font-weight: 500;">Edit</span>
           </button>
           <button mat-menu-item (click)="onCloneTask(task)">
-            <span class="material-icons" style="margin-right: 8px; font-size: 20px; vertical-align: middle;">content_copy</span>
+            <span class="material-icons"
+              style="margin-right: 8px; font-size: 20px; vertical-align: middle;">content_copy</span>
             <span style="font-weight: 500;">Clone</span>
           </button>
           <button mat-menu-item (click)="onDeleteTask(task.id)" style="color: #fa5252;">
-            <span class="material-icons" style="margin-right: 8px; color: #fa5252; font-size: 20px; vertical-align: middle;">delete</span>
+            <span class="material-icons"
+              style="margin-right: 8px; color: #fa5252; font-size: 20px; vertical-align: middle;">delete</span>
             <span style="font-weight: 500;">Delete</span>
           </button>
         </mat-menu>
@@ -101,7 +126,8 @@
 
       <div class="task-card-body">
         <h3 class="task-title" [title]="task.title">{{ task.title }}</h3>
-        <p class="task-desc">{{ task.description }}</p>
+        <p class="task-desc">{{ task.description.length > 20 ? (task.description | slice:0:20) + '...' :
+          task.description }}</p>
       </div>
 
       <div class="task-card-footer">

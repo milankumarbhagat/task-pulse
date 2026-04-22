@@ -56,9 +56,9 @@ export class TaskFormComponent implements OnInit {
 
   private initForm(): void {
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.maxLength(500)]],
-      status: ['PENDING', Validators.required],
+      title: ['', [Validators.required, Validators.maxLength(30)]],
+      description: ['', [Validators.required, Validators.maxLength(80)]],
+      status: [TaskStatus.TODO, Validators.required],
       dueDate: ['', Validators.required],
       priority: ['MEDIUM', Validators.required]
     });

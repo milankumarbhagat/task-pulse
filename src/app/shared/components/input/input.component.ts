@@ -26,6 +26,9 @@ export class InputComponent {
   @Input() isSubmitted: boolean = false;
   @Input() icon: string = '';
   @Input() appearance: 'fill' | 'outline' = 'outline';
+  @Input() max: string = '';
+  @Input() options: { label: string, value: any }[] = [];
+  @Input() maxlength: number | null = null;
 
   @Output() blurEvent = new EventEmitter<void>();
 

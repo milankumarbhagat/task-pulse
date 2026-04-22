@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { TaskService } from '../../../core/services/task.service';
-import { Task } from '../../../core/models/task.model';
+import { Task, TaskStatus, TaskPriority } from '../../../core/models/task.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { DueDateBadgeComponent } from '../../../shared/components/due-date-badge/due-date-badge.component';
 
@@ -21,21 +21,29 @@ export class TaskListComponent implements OnInit {
   isLoading = true;
 
   searchQuery: string = '';
-  selectedStatus: string = '';
-  selectedPriority: string = '';
+  selectedStatuses: string[] = []; // Changed to array for multi-select
+  selectedPriorities: string[] = []; // Changed to array for multi-select
   showFilters: boolean = false;
+  readonly TaskStatus = TaskStatus; // Expose to template
 
   get filteredTasks(): Task[] {
     return this.tasks.filter(task => {
       const matchSearch = task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
                           (task.description && task.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
-      const matchStatus = this.selectedStatus ? task.status === this.selectedStatus : true;
-      const matchPriority = this.selectedPriority ? task.priority === this.selectedPriority : true;
+      
+      // If no statuses selected, hide COMPLETED by default
+      const matchStatus = this.selectedStatuses.length > 0 
+        ? this.selectedStatuses.includes(task.status) 
+        : task.status !== TaskStatus.COMPLETED;
+
+      const matchPriority = this.selectedPriorities.length > 0 
+        ? this.selectedPriorities.includes(task.priority) 
+        : true;
       return matchSearch && matchStatus && matchPriority;
     });
   }
 
-  constructor(private taskService: TaskService, private router: Router) {}
+  constructor(private taskService: TaskService, private router: Router, private eRef: ElementRef) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -97,14 +105,40 @@ export class TaskListComponent implements OnInit {
   }
 
   markComplete(task: Task): void {
-    if (task.status === 'COMPLETED') return;
-    const updatedTask = { ...task, status: 'COMPLETED' as any };
+    if (task.status === TaskStatus.COMPLETED) return;
+    const updatedTask = { ...task, status: TaskStatus.COMPLETED as any };
     this.taskService.updateTask(task.id!, updatedTask).subscribe({
       next: () => {
-        task.status = 'COMPLETED';
+        task.status = TaskStatus.COMPLETED;
       },
       error: (error) => console.error('Error marking task as complete', error)
     });
+  }
+
+  toggleStatus(status: string): void {
+    const index = this.selectedStatuses.indexOf(status);
+    if (index === -1) {
+      this.selectedStatuses.push(status);
+    } else {
+      this.selectedStatuses.splice(index, 1);
+    }
+  }
+
+  isStatusSelected(status: string): boolean {
+    return this.selectedStatuses.includes(status);
+  }
+
+  togglePriority(priority: string): void {
+    const index = this.selectedPriorities.indexOf(priority);
+    if (index === -1) {
+      this.selectedPriorities.push(priority);
+    } else {
+      this.selectedPriorities.splice(index, 1);
+    }
+  }
+
+  isPrioritySelected(priority: string): boolean {
+    return this.selectedPriorities.includes(priority);
   }
 
   getStatusClass(status: string): string {
@@ -113,5 +147,13 @@ export class TaskListComponent implements OnInit {
 
   getPriorityClass(priority: string): string {
     return `priority-${priority.toLowerCase()}`;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    // Only auto-hide on mobile view (width <= 768px)
+    if (window.innerWidth <= 768 && this.showFilters && !this.eRef.nativeElement.contains(event.target)) {
+      this.showFilters = false;
+    }
   }
 }

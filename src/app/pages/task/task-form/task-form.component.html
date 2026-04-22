@@ -9,20 +9,31 @@
       
       <!-- Title -->
       <div class="form-group custom-input-wrapper">
-        <label for="title">Title <span class="required">*</span></label>
-        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title">
+        <div class="label-with-counter">
+          <label for="title">Title <span class="required">*</span></label>
+          <span class="char-counter" *ngIf="taskForm.get('title')?.value?.length > 0">
+            {{ taskForm.get('title')?.value?.length }}/30
+          </span>
+        </div>
+        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title" maxlength="30">
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['required']">
           Title is required
         </div>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['maxlength']">
-          Title cannot exceed 100 characters
+          Title cannot exceed 30 characters
         </div>
       </div>
 
       <!-- Description -->
       <div class="form-group custom-textarea-wrapper">
-        <label for="description">Description <span class="required">*</span></label>
-        <textarea id="description" formControlName="description" class="custom-textarea" rows="2" placeholder="Task description..."></textarea>
+        <div class="label-with-counter">
+          <label for="description">Description <span class="required">*</span></label>
+          <span class="char-counter" *ngIf="taskForm.get('description')?.value?.length > 0">
+            {{ taskForm.get('description')?.value?.length }}/80
+          </span>
+        </div>
+        <textarea id="description" formControlName="description" class="custom-textarea" rows="2" 
+          placeholder="Task description..." maxlength="80"></textarea>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('description')?.errors?.['required']">
           Description is required
         </div>
@@ -47,7 +58,7 @@
         <div class="form-group select-wrapper">
           <label for="status">Status <span class="required">*</span></label>
           <select id="status" formControlName="status" class="custom-select">
-            <option value="PENDING">Pending</option>
+            <option value="TODO">To Do</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
           </select>
