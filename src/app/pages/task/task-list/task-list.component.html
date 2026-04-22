@@ -32,46 +32,60 @@
   </div>
 
   <div *ngIf="!isLoading && tasks.length > 0 && showFilters" class="filter-dashboard">
-    <div class="search-box">
-      <span class="material-icons search-icon">search</span>
-      <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks..." class="filter-input">
-    </div>
-    <div class="filter-selects">
-      <div class="status-checkbox-group">
-        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.TODO)">
-          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)" (change)="toggleStatus(TaskStatus.TODO)">
-          <span class="material-icons">list_alt</span>
-          To Do
-        </label>
-        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
-          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
-            (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
-          <span class="material-icons">sync</span>
-          In Progress
-        </label>
-        <label class="status-checkbox" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
-          <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
-            (change)="toggleStatus(TaskStatus.COMPLETED)">
-          <span class="material-icons">check_circle</span>
-          Completed
-        </label>
+    <!-- Search Row -->
+    <div class="filter-row search-row">
+      <div class="search-box">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks by title or description..." class="filter-input">
       </div>
-      <div class="priority-checkbox-group">
-        <label class="priority-checkbox high" [class.active]="isPrioritySelected('HIGH')">
-          <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
-          <span class="material-icons">keyboard_double_arrow_up</span>
-          High
-        </label>
-        <label class="priority-checkbox medium" [class.active]="isPrioritySelected('MEDIUM')">
-          <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
-          <span class="material-icons">drag_handle</span>
-          Medium
-        </label>
-        <label class="priority-checkbox low" [class.active]="isPrioritySelected('LOW')">
-          <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
-          <span class="material-icons">keyboard_double_arrow_down</span>
-          Low
-        </label>
+    </div>
+
+    <!-- Filter Options Row -->
+    <div class="filter-row groups-row">
+      <!-- Status Group -->
+      <div class="filter-group">
+        <span class="filter-label">Status:</span>
+        <div class="filter-chips">
+          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.TODO)">
+            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)" (change)="toggleStatus(TaskStatus.TODO)">
+            <span class="material-icons">list_alt</span>
+            <span>To Do</span>
+          </label>
+          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
+            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
+              (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
+            <span class="material-icons">sync</span>
+            <span>In Progress</span>
+          </label>
+          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
+            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
+              (change)="toggleStatus(TaskStatus.COMPLETED)">
+            <span class="material-icons">check_circle</span>
+            <span>Completed</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Priority Group -->
+      <div class="filter-group">
+        <span class="filter-label">Priority:</span>
+        <div class="filter-chips">
+          <label class="filter-chip priority-chip-high" [class.active]="isPrioritySelected('HIGH')">
+            <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
+            <span class="material-icons">keyboard_double_arrow_up</span>
+            <span>High</span>
+          </label>
+          <label class="filter-chip priority-chip-medium" [class.active]="isPrioritySelected('MEDIUM')">
+            <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
+            <span class="material-icons">drag_handle</span>
+            <span>Medium</span>
+          </label>
+          <label class="filter-chip priority-chip-low" [class.active]="isPrioritySelected('LOW')">
+            <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
+            <span class="material-icons">keyboard_double_arrow_down</span>
+            <span>Low</span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
