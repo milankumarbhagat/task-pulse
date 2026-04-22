@@ -18,11 +18,13 @@
 
 /* Statuses */
 .overdue {
-  background-color: #fef2f2;
-  color: #b91c1c;
+  background-color: rgba(254, 242, 242, 0.8);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.1);
 }
 .overdue .badge-dot {
   background-color: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
 .due-today {

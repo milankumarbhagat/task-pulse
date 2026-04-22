@@ -74,6 +74,22 @@
   color: #fa5252;
 }
 
+.label-with-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-counter {
+  font-size: 0.75rem;
+  color: #adb5bd;
+  font-weight: 600;
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #eef0f2;
+}
+
 .custom-input, .custom-textarea, .custom-select {
   width: 100%;
   padding: 0.85rem 1.2rem;

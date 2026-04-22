@@ -17,6 +17,12 @@ import { APP_CONSTANTS } from '../../core/constants/app.constants';
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   isLoading = false;
+  maxDob: string = '';
+  genderOptions = [
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
+    { label: 'Others', value: 'Others' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -26,8 +32,15 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.calculateMaxDob();
     this.initForm();
     this.loadProfile();
+  }
+
+  calculateMaxDob(): void {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate());
+    this.maxDob = maxDate.toISOString().split('T')[0];
   }
 
   initForm(): void {
