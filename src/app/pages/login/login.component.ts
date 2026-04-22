@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
           this.isLoading = false;
           this.router.navigate(['/task']);
           this._notification.success('Login successful!!', 1000);
+          this._notification.subscribeToNotifications();
         },
         error: (err: any) => {
           this.isLoading = false;

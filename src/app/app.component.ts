@@ -5,6 +5,7 @@ import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationErr
 
 import { APP_CONSTANTS } from './core/constants/app.constants';
 import { AuthService } from './core/services/auth.service';
+import { NotificationService } from './services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +23,12 @@ export class AppComponent {
   constructor(
     public router: Router,
     private cdr: ChangeDetectorRef,
-    public authService: AuthService
+    public authService: AuthService,
+    private notificationService: NotificationService
   ) {
+    if (this.authService.currentUserValue) {
+      this.notificationService.subscribeToNotifications();
+    }
     this.router.events.subscribe(event => {
       // Close mobile menu on any navigation
       if (event instanceof NavigationStart) {
