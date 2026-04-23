@@ -14,6 +14,7 @@ export interface User {
   dob?: string;
   phone?: string;
   occupation?: string;
+  picture?: string;
 }
 
 export interface LoginResponse {

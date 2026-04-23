@@ -56,6 +56,18 @@ export class AuthService {
     );
   }
 
+  googleLogin(idToken: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/google`, { idToken }).pipe(
+      tap((response) => {
+        if (response && response.access_token) {
+          localStorage.setItem('token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
+  }
+
   /* 
     This function is used by the authGuard to verify if the user is authenticated
     and if the token is valid from backend.

@@ -6,23 +6,52 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { APP_CONSTANTS } from '../../core/constants/app.constants';
+import { MAT_DATE_FORMATS, DateAdapter, NativeDateAdapter } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' },
+  },
+};
+
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      return new DatePipe('en-US').transform(date, 'EEE, dd MMM yyyy') || '';
+    }
+    return super.format(date, displayFormat);
+  }
+}
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   isLoading = false;
   maxDob: string = '';
+  maxDobDate: Date | null = null;
   genderOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
     { label: 'Others', value: 'Others' }
   ];
+  userPicture: string | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -41,6 +70,7 @@ export class ProfileComponent implements OnInit {
     const today = new Date();
     const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate());
     this.maxDob = maxDate.toISOString().split('T')[0];
+    this.maxDobDate = maxDate;
   }
 
   initForm(): void {
@@ -61,9 +91,12 @@ export class ProfileComponent implements OnInit {
   loadProfile(): void {
     this.userService.getProfile().subscribe({
       next: (user) => {
+        this.userPicture = user.picture;
         const formData = { ...user };
         if (formData.dob) {
           formData.dob = formData.dob.split('T')[0];
+          // Disable DOB field if it is already set
+          this.profileForm.get('dob')?.disable();
         }
         this.profileForm.patchValue(formData);
       },

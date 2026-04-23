@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -18,6 +18,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { environment } from '../../../environments/environment';
+
+declare var google: any;
 
 @Component({
   selector: 'app-sign-up',
@@ -46,7 +49,8 @@ export class SignUpComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +68,49 @@ export class SignUpComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
+
+    this.initializeGoogleLogin();
+  }
+
+  private initializeGoogleLogin(): void {
+    if (typeof google !== 'undefined') {
+      google.accounts.id.initialize({
+        client_id: environment.GOOGLE_CLIENT_ID,
+        callback: (response: any) => this.handleGoogleLogin(response),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById('google-signup-btn'),
+        { 
+          theme: 'outline', 
+          size: 'large', 
+          width: 320, 
+          text: 'signup_with',
+          shape: 'pill',
+          logo_alignment: 'left'
+        }
+      );
+    }
+  }
+
+  private handleGoogleLogin(response: any): void {
+    this.isLoading = true;
+    this.authService.googleLogin(response.credential).subscribe({
+      next: (res) => {
+        this.ngZone.run(() => {
+          this.isLoading = false;
+          this.router.navigate(['/task']);
+        });
+      },
+      error: (err) => {
+        this.ngZone.run(() => {
+          this.isLoading = false;
+          this.errorMessage = 'Google Sign up failed. Please try again.';
+        });
+      }
+    });
   }
 
   ageValidator(control: AbstractControl): ValidationErrors | null {

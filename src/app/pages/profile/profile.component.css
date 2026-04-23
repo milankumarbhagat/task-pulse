@@ -215,6 +215,10 @@
     padding: 0 1.2rem 1.5rem;
   }
 
+  .dob-field {
+    grid-column: 1 / -1;
+  }
+
   .form-section-title {
     padding: 0 1.5rem 1rem;
   }
