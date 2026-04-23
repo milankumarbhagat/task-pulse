@@ -6,9 +6,11 @@
     </div>
     <div class="header-actions">
       <button class="filter-toggle-btn shrink-0" (click)="showFilters = !showFilters"
-        [class.active-filter]="showFilters || searchQuery || selectedStatuses.length > 0 || selectedPriorities.length > 0"
+        [class.is-open]="showFilters"
+        [class.has-filters]="activeFiltersCount > 0"
         title="Toggle Filters">
-        <span class="material-icons">{{ showFilters ? 'close' : 'tune' }}</span>
+        <span class="material-icons">tune</span>
+        <span class="filter-badge" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
       </button>
       <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
         <span class="material-icons" style="font-size: 28px; line-height: 1; margin-top: 5px;">add</span>
@@ -31,62 +33,84 @@
       class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
   </div>
 
-  <div *ngIf="!isLoading && tasks.length > 0 && showFilters" class="filter-dashboard">
-    <!-- Search Row -->
-    <div class="filter-row search-row">
-      <div class="search-box">
-        <span class="material-icons search-icon">search</span>
-        <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks by title or description..." class="filter-input">
-      </div>
-    </div>
-
-    <!-- Filter Options Row -->
-    <div class="filter-row groups-row">
-      <!-- Status Group -->
-      <div class="filter-group">
-        <span class="filter-label">Status:</span>
-        <div class="filter-chips">
-          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.TODO)">
-            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)" (change)="toggleStatus(TaskStatus.TODO)">
-            <span class="material-icons">list_alt</span>
-            <span>To Do</span>
-          </label>
-          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
-            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
-              (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
-            <span class="material-icons">sync</span>
-            <span>In Progress</span>
-          </label>
-          <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
-            <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
-              (change)="toggleStatus(TaskStatus.COMPLETED)">
-            <span class="material-icons">check_circle</span>
-            <span>Completed</span>
-          </label>
+  <!-- Filter Overlay Section -->
+  <div class="filter-overlay-container" *ngIf="!isLoading && tasks.length > 0 && showFilters">
+    <div class="filter-backdrop" (click)="showFilters = false"></div>
+    <div class="filter-dashboard">
+      <!-- Search Row -->
+      <div class="filter-row search-row">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks by title or description..."
+            class="filter-input">
         </div>
       </div>
 
-      <!-- Priority Group -->
-      <div class="filter-group">
-        <span class="filter-label">Priority:</span>
-        <div class="filter-chips">
-          <label class="filter-chip priority-chip-high" [class.active]="isPrioritySelected('HIGH')">
-            <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
-            <span class="material-icons">keyboard_double_arrow_up</span>
-            <span>High</span>
-          </label>
-          <label class="filter-chip priority-chip-medium" [class.active]="isPrioritySelected('MEDIUM')">
-            <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
-            <span class="material-icons">drag_handle</span>
-            <span>Medium</span>
-          </label>
-          <label class="filter-chip priority-chip-low" [class.active]="isPrioritySelected('LOW')">
-            <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
-            <span class="material-icons">keyboard_double_arrow_down</span>
-            <span>Low</span>
-          </label>
+      <!-- Filter Options Row -->
+      <div class="filter-row groups-row">
+        <!-- Status Group -->
+        <div class="filter-group">
+          <span class="filter-label">Status:</span>
+          <div class="filter-chips">
+            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.TODO)">
+              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)"
+                (change)="toggleStatus(TaskStatus.TODO)">
+              <span class="material-icons">list_alt</span>
+              <span>To Do</span>
+            </label>
+            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
+              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
+                (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
+              <span class="material-icons">sync</span>
+              <span>In Progress</span>
+            </label>
+            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
+              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
+                (change)="toggleStatus(TaskStatus.COMPLETED)">
+              <span class="material-icons">check_circle</span>
+              <span>Completed</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Priority Group -->
+        <div class="filter-group">
+          <span class="filter-label">Priority:</span>
+          <div class="filter-chips">
+            <label class="filter-chip priority-chip-high" [class.active]="isPrioritySelected('HIGH')">
+              <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
+              <span class="material-icons">keyboard_double_arrow_up</span>
+              <span>High</span>
+            </label>
+            <label class="filter-chip priority-chip-medium" [class.active]="isPrioritySelected('MEDIUM')">
+              <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
+              <span class="material-icons">drag_handle</span>
+              <span>Medium</span>
+            </label>
+            <label class="filter-chip priority-chip-low" [class.active]="isPrioritySelected('LOW')">
+              <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
+              <span class="material-icons">keyboard_double_arrow_down</span>
+              <span>Low</span>
+            </label>
+          </div>
         </div>
       </div>
+
+      <div class="filter-footer" style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = [];" 
+          style="flex: 1; padding: 0.8rem; border-radius: 12px; border: 1px solid #eef0f2; background: white; color: #6c757d; font-weight: 600; cursor: pointer;">
+          Clear All
+        </button>
+        <button class="btn-apply" (click)="showFilters = false" 
+          style="flex: 2; padding: 0.8rem; border-radius: 12px; border: none; background: #4f46e5; color: white; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
+          Apply Filters
+        </button>
+      </div>
+      
+      <button class="close-modal-btn" (click)="showFilters = false" 
+        style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: #adb5bd; cursor: pointer;">
+        <span class="material-icons">close</span>
+      </button>
     </div>
   </div>
 
@@ -140,11 +164,15 @@
 
       <div class="task-card-body">
         <h3 class="task-title" [title]="task.title">{{ task.title }}</h3>
-        <p class="task-desc">{{ task.description.length > 20 ? (task.description | slice:0:20) + '...' :
+        <p class="task-desc">{{ task.description.length > 20 ? (task.description | slice:0:150) + '...' :
           task.description }}</p>
       </div>
 
       <div class="task-card-footer">
+        <div class="due-date-info">
+          <span class="due-label">Due Date:</span>
+          <span class="due-value">{{ task.dueDate | date: 'EEE, dd MMM yyyy' }}</span>
+        </div>
         <div class="due-date-wrapper">
           <app-due-date-badge [dueDate]="task.dueDate"></app-due-date-badge>
         </div>

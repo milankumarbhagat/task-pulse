@@ -8,10 +8,50 @@ import { InputComponent } from '../../../shared/components/input/input.component
 import { DueDateBadgeComponent } from '../../../shared/components/due-date-badge/due-date-badge.component';
 import { Task, TaskPriority, TaskStatus } from '../../../core/models/task.model';
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE, NativeDateAdapter, DateAdapter } from '@angular/material/core';
+
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = date.toLocaleString('en-GB', { month: 'short' });
+      const year = date.getFullYear();
+      const weekday = date.toLocaleString('en-GB', { weekday: 'short' });
+      return `${weekday}, ${day} ${month} ${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+}
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' },
+  },
+};
+
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, InputComponent, DueDateBadgeComponent],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    ButtonComponent, 
+    InputComponent, 
+    DueDateBadgeComponent,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ],
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.css'
 })
@@ -22,6 +62,7 @@ export class TaskFormComponent implements OnInit {
   isSubmitted = false;
   isLoading = false;
   errorMessage = '';
+  minDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +87,7 @@ export class TaskFormComponent implements OnInit {
           title: `${clone.title} (Clone)`,
           description: clone.description,
           status: clone.status,
-          dueDate: this.formatDateForInput(clone.dueDate),
+          dueDate: new Date(clone.dueDate),
           priority: clone.priority
         });
         this.checkAndDisableDueDate();
@@ -56,10 +97,10 @@ export class TaskFormComponent implements OnInit {
 
   private initForm(): void {
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(30)]],
-      description: ['', [Validators.required, Validators.maxLength(80)]],
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.maxLength(200)]],
       status: [TaskStatus.TODO, Validators.required],
-      dueDate: ['', Validators.required],
+      dueDate: [new Date(), Validators.required],
       priority: ['MEDIUM', Validators.required]
     });
   }
@@ -72,7 +113,7 @@ export class TaskFormComponent implements OnInit {
           title: task.title,
           description: task.description,
           status: task.status,
-          dueDate: this.formatDateForInput(task.dueDate),
+          dueDate: new Date(task.dueDate),
           priority: task.priority
         });
         this.checkAndDisableDueDate();
@@ -90,9 +131,12 @@ export class TaskFormComponent implements OnInit {
     if (this.isEditMode) {
       const dueDateValue = this.taskForm.get('dueDate')?.value;
       if (dueDateValue) {
-        const todayStr = this.formatDateForInput(new Date());
-        // If the task is already overdue or due today, lock it.
-        if (dueDateValue <= todayStr) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(dueDateValue);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate <= today) {
           this.taskForm.get('dueDate')?.disable();
         } else {
           // If it's a future task, keep it unlocked so they can still see the calendar!
