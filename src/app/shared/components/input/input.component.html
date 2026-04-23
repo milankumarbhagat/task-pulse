@@ -36,9 +36,9 @@
         (blur)="handleBlurEvent($event)" 
         [placeholder]="placeholder"
         class="custom-input date-picker-input"
-        [ngClass]="{'has-icon': icon}"
+        [ngClass]="{'has-icon': icon, 'is-disabled': control?.disabled}"
         [max]="maxDate">
-      <mat-datepicker-toggle matIconSuffix [for]="picker" class="datepicker-toggle"></mat-datepicker-toggle>
+      <mat-datepicker-toggle *ngIf="control && !control.disabled" matIconSuffix [for]="picker" class="datepicker-toggle"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </ng-container>
 

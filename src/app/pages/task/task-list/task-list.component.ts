@@ -23,12 +23,14 @@ export class TaskListComponent implements OnInit {
   searchQuery: string = '';
   selectedStatuses: string[] = []; // Changed to array for multi-select
   selectedPriorities: string[] = []; // Changed to array for multi-select
+  selectedDay: string = 'all'; // 'all', 'yesterday', 'today', 'tomorrow'
   showFilters: boolean = false;
   readonly TaskStatus = TaskStatus; // Expose to template
 
   get activeFiltersCount(): number {
     let count = 0;
     if (this.searchQuery.trim()) count++;
+    if (this.selectedDay !== 'all') count++;
     count += this.selectedStatuses.length;
     count += this.selectedPriorities.length;
     return count;
@@ -47,8 +49,35 @@ export class TaskListComponent implements OnInit {
       const matchPriority = this.selectedPriorities.length > 0 
         ? this.selectedPriorities.includes(task.priority) 
         : true;
-      return matchSearch && matchStatus && matchPriority;
+
+      const matchDay = this.checkDayMatch(task.dueDate, this.selectedDay);
+
+      return matchSearch && matchStatus && matchPriority && matchDay;
     });
+  }
+
+  private checkDayMatch(dueDate: any, filter: string): boolean {
+    if (filter === 'all' || !dueDate) return filter === 'all';
+
+    const taskDate = new Date(dueDate);
+    const today = new Date();
+    
+    // Reset time for comparison
+    const compareDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
+    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    switch (filter) {
+      case 'yesterday':
+        return compareDate === todayDate - oneDay;
+      case 'today':
+        return compareDate === todayDate;
+      case 'tomorrow':
+        return compareDate === todayDate + oneDay;
+      default:
+        return true;
+    }
   }
 
   constructor(private taskService: TaskService, private router: Router, private eRef: ElementRef) {}

@@ -46,6 +46,35 @@
         </div>
       </div>
 
+      <!-- Timeframe Group -->
+      <div class="filter-row timeframe-row">
+        <div class="filter-group">
+          <span class="filter-label">Timeframe:</span>
+          <div class="filter-chips">
+            <label class="filter-chip" [class.active]="selectedDay === 'all'">
+              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="all">
+              <span class="material-icons">calendar_today</span>
+              <span>All Days</span>
+            </label>
+            <label class="filter-chip" [class.active]="selectedDay === 'yesterday'">
+              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="yesterday">
+              <span class="material-icons">history</span>
+              <span>Yesterday</span>
+            </label>
+            <label class="filter-chip" [class.active]="selectedDay === 'today'">
+              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="today">
+              <span class="material-icons">today</span>
+              <span>Today</span>
+            </label>
+            <label class="filter-chip" [class.active]="selectedDay === 'tomorrow'">
+              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="tomorrow">
+              <span class="material-icons">upcoming</span>
+              <span>Tomorrow</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
       <!-- Filter Options Row -->
       <div class="filter-row groups-row">
         <!-- Status Group -->
@@ -97,7 +126,7 @@
       </div>
 
       <div class="filter-footer" style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = [];" 
+        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = []; selectedDay = 'all';" 
           style="flex: 1; padding: 0.8rem; border-radius: 12px; border: 1px solid #eef0f2; background: white; color: #6c757d; font-weight: 600; cursor: pointer;">
           Clear All
         </button>

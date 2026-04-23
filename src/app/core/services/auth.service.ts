@@ -56,6 +56,18 @@ export class AuthService {
     );
   }
 
+  googleLogin(idToken: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/google`, { idToken }).pipe(
+      tap((response) => {
+        if (response && response.access_token) {
+          localStorage.setItem('token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
+  }
+
   /* 
     This function is used by the authGuard to verify if the user is authenticated
     and if the token is valid from backend.
@@ -79,5 +91,13 @@ export class AuthService {
   */
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
   }
 }
