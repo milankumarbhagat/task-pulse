@@ -4,7 +4,7 @@
   <div class="input-inner">
     <span class="material-icons prefix-icon" *ngIf="icon">{{ icon }}</span>
 
-    <ng-container *ngIf="inputType !== 'date' && inputType !== 'textarea' && inputType !== 'select'">
+    <ng-container *ngIf="inputType !== 'date' && inputType !== 'textarea' && inputType !== 'select' && inputType !== 'datepicker'">
       <input [type]="inputType === 'password' ? (hidePassword ? 'password' : 'text') : inputType" 
         [id]="id"
         [formControl]="control" 
@@ -12,7 +12,8 @@
         [placeholder]="placeholder"
         class="custom-input"
         [ngClass]="{'has-icon': icon}"
-        [maxlength]="maxlength">
+        [maxlength]="maxlength"
+        [attr.autocomplete]="autocomplete">
     </ng-container>
 
     <ng-container *ngIf="inputType === 'select'">
@@ -27,15 +28,18 @@
       </select>
     </ng-container>
 
-    <ng-container *ngIf="inputType === 'date'">
-      <input type="date"
+    <ng-container *ngIf="inputType === 'datepicker'">
+      <input 
+        [matDatepicker]="picker"
         [id]="id"
         [formControl]="control" 
         (blur)="handleBlurEvent($event)" 
         [placeholder]="placeholder"
-        class="custom-input"
+        class="custom-input date-picker-input"
         [ngClass]="{'has-icon': icon}"
-        [max]="max">
+        [max]="maxDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker" class="datepicker-toggle"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </ng-container>
 
     <button type="button" class="password-toggle-btn" *ngIf="inputType === 'password'" (click)="togglePasswordVisibility()" title="Toggle Password">

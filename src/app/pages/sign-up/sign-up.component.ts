@@ -37,6 +37,7 @@ export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
+  maxDate!: Date;
 
   occupations: string[] = [
     'Software Engineer', 'Designer', 'Product Manager', 'Student', 'Other'
@@ -49,17 +50,34 @@ export class SignUpComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const today = new Date();
+    this.maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate());
+
     this.signUpForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: [''],
       email: ['', [Validators.required, Validators.email]],
       gender: [''],
-      dob: [''],
+      dob: ['', [Validators.required, this.ageValidator]],
       phone: ['', Validators.pattern('^[0-9+() -]*$')],
       occupation: [''],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  ageValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const dob = new Date(control.value);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+    
+    return age >= 12 ? null : { underAge: true };
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {

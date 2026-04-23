@@ -15,8 +15,8 @@
           classes="custom-field"></app-input>
       </div>
 
-      <app-input class="full-width" label="Email Address" inputType="email" controlName="email" id="email"
-        placeholder="john.doe@example.com" icon="email" classes="custom-field" (blurEvent)="verifyEmail()">
+      <app-input class="full-width" autocomplete="off" label="Email Address" inputType="email" controlName="email"
+        id="email" placeholder="john.doe@example.com" icon="email" classes="custom-field" (blurEvent)="verifyEmail()">
         <span
           *ngIf="signUpForm.get('email')?.hasError('email') && !signUpForm.get('email')?.hasError('required')">Invalid
           email</span>
@@ -29,15 +29,13 @@
           <span *ngIf="signUpForm.get('phone')?.hasError('pattern')">Invalid phone</span>
         </app-input>
 
-        <mat-form-field appearance="outline" class="flex-1 custom-field">
-          <mat-label>Date of Birth</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="dob">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <app-input class="flex-1" label="Date of Birth" inputType="datepicker" controlName="dob" id="dob"
+          classes="custom-field" [maxDate]="maxDate">
+          <span *ngIf="signUpForm.get('dob')?.hasError('underAge')">Must be at least 12 years old</span>
+        </app-input>
       </div>
 
-      <div class="form-row align-center">
+      <div class="form-row align-start">
         <div class="gender-section flex-1 custom-field-container">
           <label class="section-label">Gender</label>
           <mat-radio-group formControlName="gender" color="primary" class="modern-radio-group">
@@ -47,26 +45,28 @@
           </mat-radio-group>
         </div>
 
-        <mat-form-field appearance="outline" class="flex-1 custom-field">
-          <mat-label>Occupation</mat-label>
-          <mat-select formControlName="occupation">
-            <mat-option *ngFor="let occ of occupations" [value]="occ">
-              {{occ}}
-            </mat-option>
-          </mat-select>
-          <mat-icon matPrefix>work</mat-icon>
-        </mat-form-field>
+        <div class="flex-1 occupation-wrapper">
+          <mat-form-field appearance="outline" class="full-width custom-field">
+            <mat-label>Occupation</mat-label>
+            <mat-select formControlName="occupation">
+              <mat-option *ngFor="let occ of occupations" [value]="occ">
+                {{occ}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>work</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
 
       <app-input class="full-width mt-2" label="Password" inputType="password" controlName="password" id="password"
-        icon="lock" classes="custom-field">
+        icon="lock" classes="custom-field" autocomplete="new-password">
         <span
           *ngIf="signUpForm.get('password')?.hasError('minlength') && !signUpForm.get('password')?.hasError('required')">Min
           8 chars</span>
       </app-input>
 
       <app-input class="full-width" label="Confirm Password" inputType="password" controlName="confirmPassword"
-        id="confirmPassword" icon="lock_outline" classes="custom-field">
+        id="confirmPassword" icon="lock_outline" classes="custom-field" autocomplete="new-password">
         <span
           *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">Mismatch</span>
       </app-input>
@@ -88,8 +88,7 @@
     </form>
 
     <div class="login-prompt">
-      <p>Already have an account? <a routerLink="/login" class="login-link">Sign In -- {{isLoading ? 'yes Logout' : 'not
-          L'}} {{signUpForm.invalid ? 'In' : 'Not IN'}}</a></p>
+      <p>Already have an account? <a routerLink="/login" class="login-link">Sign In</a></p>
     </div>
   </div>
 </div>

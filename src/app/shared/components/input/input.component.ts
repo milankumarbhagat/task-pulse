@@ -27,8 +27,10 @@ export class InputComponent {
   @Input() icon: string = '';
   @Input() appearance: 'fill' | 'outline' = 'outline';
   @Input() max: string = '';
+  @Input() maxDate: Date | null = null;
   @Input() options: { label: string, value: any }[] = [];
   @Input() maxlength: number | null = null;
+  @Input() autocomplete: string = 'on';
 
   @Output() blurEvent = new EventEmitter<void>();
 
