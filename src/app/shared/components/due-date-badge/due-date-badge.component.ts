@@ -50,8 +50,7 @@ export class DueDateBadgeComponent implements OnInit, OnChanges {
       this.displayText = `Due in ${diffDays} days`;
     } else {
       this.status = 'on-track';
-      const formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      this.displayText = formatter.format(due);
+      this.displayText = 'On Track';
     }
   }
 }

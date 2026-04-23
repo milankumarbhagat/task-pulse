@@ -12,15 +12,15 @@
         <div class="label-with-counter">
           <label for="title">Title <span class="required">*</span></label>
           <span class="char-counter" *ngIf="taskForm.get('title')?.value?.length > 0">
-            {{ taskForm.get('title')?.value?.length }}/30
+            {{ taskForm.get('title')?.value?.length }}/50
           </span>
         </div>
-        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title" maxlength="30">
+        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title" maxlength="50">
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['required']">
           Title is required
         </div>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['maxlength']">
-          Title cannot exceed 30 characters
+          Title cannot exceed 50 characters
         </div>
       </div>
 
@@ -29,11 +29,11 @@
         <div class="label-with-counter">
           <label for="description">Description <span class="required">*</span></label>
           <span class="char-counter" *ngIf="taskForm.get('description')?.value?.length > 0">
-            {{ taskForm.get('description')?.value?.length }}/80
+            {{ taskForm.get('description')?.value?.length }}/200
           </span>
         </div>
         <textarea id="description" formControlName="description" class="custom-textarea" rows="2" 
-          placeholder="Task description..." maxlength="80"></textarea>
+          placeholder="Task description..." maxlength="200"></textarea>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('description')?.errors?.['required']">
           Description is required
         </div>
@@ -42,7 +42,12 @@
       <!-- Due Date -->
       <div class="form-group custom-input-wrapper">
         <label for="dueDate">Due Date <span class="required">*</span></label>
-        <input type="date" id="dueDate" formControlName="dueDate" class="custom-input">
+        <div class="datepicker-container" style="position: relative; display: flex; align-items: center;">
+          <input [matDatepicker]="picker" [min]="minDate" id="dueDate" formControlName="dueDate" class="custom-input" 
+            placeholder="Choose a date" (click)="picker.open()" readonly style="cursor: pointer;">
+          <mat-datepicker-toggle matSuffix [for]="picker" style="position: absolute; right: 10px;"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('dueDate')?.errors?.['required']">
           Due Date is required
         </div>

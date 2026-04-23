@@ -26,6 +26,14 @@ export class TaskListComponent implements OnInit {
   showFilters: boolean = false;
   readonly TaskStatus = TaskStatus; // Expose to template
 
+  get activeFiltersCount(): number {
+    let count = 0;
+    if (this.searchQuery.trim()) count++;
+    count += this.selectedStatuses.length;
+    count += this.selectedPriorities.length;
+    return count;
+  }
+
   get filteredTasks(): Task[] {
     return this.tasks.filter(task => {
       const matchSearch = task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
