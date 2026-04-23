@@ -92,4 +92,12 @@ export class AuthService {
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
+  }
 }
