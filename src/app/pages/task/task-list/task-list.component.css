@@ -28,6 +28,11 @@
 .search-icon { position: absolute; left: 16px; color: #adb5bd; font-size: 20px; }
 .filter-input { width: 100%; padding: 0.9rem 1rem 0.9rem 3.2rem; border: 1px solid #eef0f2; border-radius: 12px; font-size: 1rem; background: #f8f9fa; transition: all 0.2s; }
 .filter-input:focus { outline: none; background: white; border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79,70,229,0.1); }
+.date-input-wrapper { position: relative; display: flex; align-items: center; }
+.date-input-wrapper .material-icons { position: absolute; left: 14px; color: #adb5bd; font-size: 18px; pointer-events: none; }
+.filter-input.date-filter { padding-left: 2.5rem; width: 140px; font-family: inherit; color: #495057; cursor: pointer; }
+.filter-input.date-filter::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; transition: 0.2s; }
+.filter-input.date-filter::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 .filter-group { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .filter-label { font-size: 0.9rem; font-weight: 700; color: #495057; text-transform: uppercase; letter-spacing: 0.5px; min-width: 65px; }
 .filter-chips { display: flex; gap: 0.8rem; flex-wrap: wrap; }
