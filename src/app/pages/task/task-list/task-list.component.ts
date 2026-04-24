@@ -24,6 +24,8 @@ export class TaskListComponent implements OnInit {
   selectedStatuses: string[] = []; // Changed to array for multi-select
   selectedPriorities: string[] = []; // Changed to array for multi-select
   selectedDay: string = 'all'; // 'all', 'yesterday', 'today', 'tomorrow'
+  filterFromDate: string = '';
+  filterToDate: string = '';
   showFilters: boolean = false;
   readonly TaskStatus = TaskStatus; // Expose to template
 
@@ -31,6 +33,8 @@ export class TaskListComponent implements OnInit {
     let count = 0;
     if (this.searchQuery.trim()) count++;
     if (this.selectedDay !== 'all') count++;
+    if (this.filterFromDate) count++;
+    if (this.filterToDate) count++;
     count += this.selectedStatuses.length;
     count += this.selectedPriorities.length;
     return count;
@@ -41,10 +45,11 @@ export class TaskListComponent implements OnInit {
       const matchSearch = task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
                           (task.description && task.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
       
-      // If no statuses selected, hide COMPLETED by default
+      // If no statuses selected, hide COMPLETED by default, UNLESS a date range filter is active
+      const isDateRangeSelected = !!(this.filterFromDate || this.filterToDate);
       const matchStatus = this.selectedStatuses.length > 0 
         ? this.selectedStatuses.includes(task.status) 
-        : task.status !== TaskStatus.COMPLETED;
+        : (isDateRangeSelected ? true : task.status !== TaskStatus.COMPLETED);
 
       const matchPriority = this.selectedPriorities.length > 0 
         ? this.selectedPriorities.includes(task.priority) 
@@ -52,7 +57,31 @@ export class TaskListComponent implements OnInit {
 
       const matchDay = this.checkDayMatch(task.dueDate, this.selectedDay);
 
-      return matchSearch && matchStatus && matchPriority && matchDay;
+      let matchCustomDate = true;
+      if (task.dueDate && (this.filterFromDate || this.filterToDate)) {
+        const taskDate = new Date(task.dueDate);
+        const compareTaskDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
+
+        if (this.filterFromDate) {
+          const [y, m, d] = this.filterFromDate.split('-');
+          const compareFrom = new Date(Number(y), Number(m) - 1, Number(d)).getTime();
+          if (compareTaskDate < compareFrom) {
+            matchCustomDate = false;
+          }
+        }
+
+        if (matchCustomDate && this.filterToDate) {
+          const [y, m, d] = this.filterToDate.split('-');
+          const compareTo = new Date(Number(y), Number(m) - 1, Number(d)).getTime();
+          if (compareTaskDate > compareTo) {
+            matchCustomDate = false;
+          }
+        }
+      } else if (!task.dueDate && (this.filterFromDate || this.filterToDate)) {
+        matchCustomDate = false;
+      }
+
+      return matchSearch && matchStatus && matchPriority && matchDay && matchCustomDate;
     });
   }
 
@@ -77,6 +106,24 @@ export class TaskListComponent implements OnInit {
         return compareDate === todayDate + oneDay;
       default:
         return true;
+    }
+  }
+
+  onDateRangeChange(): void {
+    if (this.filterFromDate && this.filterToDate) {
+      const [fy, fm, fd] = this.filterFromDate.split('-');
+      const from = new Date(Number(fy), Number(fm) - 1, Number(fd));
+      
+      const [ty, tm, td] = this.filterToDate.split('-');
+      const to = new Date(Number(ty), Number(tm) - 1, Number(td));
+
+      if (from > to) {
+        from.setDate(from.getDate() + 1);
+        const ny = from.getFullYear();
+        const nm = String(from.getMonth() + 1).padStart(2, '0');
+        const nd = String(from.getDate()).padStart(2, '0');
+        this.filterToDate = `${ny}-${nm}-${nd}`;
+      }
     }
   }
 
