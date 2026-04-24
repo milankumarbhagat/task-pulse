@@ -34,9 +34,7 @@
   </div>
 
   <!-- Filter Overlay Section -->
-  <div class="filter-overlay-container" *ngIf="!isLoading && tasks.length > 0 && showFilters">
-    <div class="filter-backdrop" (click)="showFilters = false"></div>
-    <div class="filter-dashboard">
+  <app-modal [isOpen]="showFilters" (isOpenChange)="showFilters = $event" [showCloseBtn]="true">
       <!-- Search Row -->
       <div class="filter-row search-row">
         <div class="search-box">
@@ -153,13 +151,7 @@
           Apply Filters
         </button>
       </div>
-      
-      <button class="close-modal-btn" (click)="showFilters = false" 
-        style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: #adb5bd; cursor: pointer;">
-        <span class="material-icons">close</span>
-      </button>
-    </div>
-  </div>
+  </app-modal>
 
   <div *ngIf="!isLoading && filteredTasks.length === 0 && tasks.length > 0" class="empty-state">
     <div class="empty-icon">
@@ -187,15 +179,20 @@
           </span>
         </div>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn"
-          style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
-          <span class="material-icons" style="font-size: 20px;">more_vert</span>
-        </button>
-        <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
-          <button mat-menu-item (click)="onEditTask(task.id)">
-            <span class="material-icons" style="margin-right: 8px; font-size: 20px; vertical-align: middle;">edit</span>
-            <span style="font-weight: 500;">Edit</span>
+        <div style="display: flex; gap: 0.2rem;">
+          <button mat-icon-button (click)="onEditTask(task.id)" class="action-edit-btn"
+            style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;"
+            title="Edit Task">
+            <span class="material-icons" style="font-size: 20px;">edit</span>
           </button>
+          
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn"
+            style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;"
+            title="More Options">
+            <span class="material-icons" style="font-size: 20px;">more_vert</span>
+          </button>
+        </div>
+        <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
           <button mat-menu-item (click)="onCloneTask(task)">
             <span class="material-icons"
               style="margin-right: 8px; font-size: 20px; vertical-align: middle;">content_copy</span>
@@ -211,8 +208,10 @@
 
       <div class="task-card-body">
         <h3 class="task-title" [title]="task.title">{{ task.title }}</h3>
-        <p class="task-desc">{{ task.description.length > 20 ? (task.description | slice:0:150) + '...' :
-          task.description }}</p>
+        <p class="task-desc">
+          {{ task.description.length > 100 ? (task.description | slice:0:100) + '...' : task.description }}
+          <a *ngIf="task.description.length > 100" class="read-more-link" (click)="viewDescription(task)">Read More</a>
+        </p>
       </div>
 
       <div class="task-card-footer">
@@ -226,4 +225,15 @@
       </div>
     </div>
   </div>
+
+  <!-- Task Description Modal -->
+  <app-modal 
+    [isOpen]="!!selectedTaskForDescription" 
+    (isOpenChange)="!$event ? closeDescription() : null" 
+    [title]="selectedTaskForDescription?.title || 'Task Details'"
+    [showCloseBtn]="true">
+    <div class="task-description-content" style="color: #495057; line-height: 1.7; font-size: 1.05rem; margin-top: 20px;">
+      {{ selectedTaskForDescription?.description }}
+    </div>
+  </app-modal>
 </div>

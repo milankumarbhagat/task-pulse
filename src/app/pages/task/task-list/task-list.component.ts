@@ -8,11 +8,12 @@ import { TaskService } from '../../../core/services/task.service';
 import { Task, TaskStatus, TaskPriority } from '../../../core/models/task.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { DueDateBadgeComponent } from '../../../shared/components/due-date-badge/due-date-badge.component';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatMenuModule, MatButtonModule, ButtonComponent, DueDateBadgeComponent],
+  imports: [CommonModule, FormsModule, MatMenuModule, MatButtonModule, ButtonComponent, DueDateBadgeComponent, ModalComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css'
 })
@@ -28,6 +29,7 @@ export class TaskListComponent implements OnInit {
   filterToDate: string = '';
   showFilters: boolean = false;
   readonly TaskStatus = TaskStatus; // Expose to template
+  selectedTaskForDescription: Task | null = null;
 
   get activeFiltersCount(): number {
     let count = 0;
@@ -165,6 +167,14 @@ export class TaskListComponent implements OnInit {
 
   onAddTask(): void {
     this.router.navigate(['/task/add']);
+  }
+
+  viewDescription(task: Task): void {
+    this.selectedTaskForDescription = task;
+  }
+
+  closeDescription(): void {
+    this.selectedTaskForDescription = null;
   }
 
   onEditTask(id: string | number | undefined): void {
