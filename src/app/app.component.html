@@ -1,59 +1,61 @@
-<header class="app-header">
-  <nav class="navbar">
-    <div class="nav-brand">
-      <img src="icons/icon-72x72.png" alt="Task Pulse Logo" class="brand-logo" />
-      <span class="brand-text">{{appName}}</span>
+<ion-app>
+  <header class="app-header">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <img src="icons/icon-72x72.png" alt="Task Pulse Logo" class="brand-logo" />
+        <span class="brand-text">{{appName}}</span>
+      </div>
+
+      <!-- Mobile Hamburger Toggle -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <span class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
+      </button>
+
+      <!-- Overlay Backdrop -->
+      <div class="sidebar-backdrop" [class.open]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+
+      <ng-container *ngIf="authService.currentUser$ | async as user; else guestNav">
+        <!-- Right Side Navigation / Sidebar on Mobile -->
+        <div class="nav-container" [class.open]="isMobileMenuOpen">
+          <div class="nav-links">
+            <a routerLink="/task" routerLinkActive="active" class="nav-item">
+              <span class="material-icons">task_alt</span>
+              <span class="nav-text">Tasks</span>
+            </a>
+            <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+              <img [src]="user.picture || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=2b5876&color=fff&size=48'" 
+                   alt="Profile" class="profile-img" />
+              <span class="nav-text">Profile</span>
+            </a>
+          </div>
+          <div class="nav-auth">
+            <a href="javascript:void(0)" (click)="authService.logout(); router.navigate(['/login'])" class="btn-logout">
+              <span class="material-icons" style="font-size: 18px; margin-right: 4px; vertical-align: middle;">logout</span>
+              <span class="nav-text" style="vertical-align: middle;">Logout</span>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #guestNav>
+        <div class="nav-container" [class.open]="isMobileMenuOpen">
+          <div class="nav-auth">
+            <a routerLink="/login" routerLinkActive="active" class="btn-login" (click)="closeMobileMenu()">Login</a>
+            <a routerLink="/sign-up" routerLinkActive="active" class="btn-signup" (click)="closeMobileMenu()">Sign Up</a>
+          </div>
+        </div>
+      </ng-template>
+    </nav>
+  </header>
+
+  <div *ngIf="isLoading" class="loader-overlay">
+    <div class="spinner">
+      <div class="double-bounce1"></div>
+      <div class="double-bounce2"></div>
     </div>
-
-    <!-- Mobile Hamburger Toggle -->
-    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" aria-label="Toggle menu">
-      <span class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
-    </button>
-
-    <!-- Overlay Backdrop -->
-    <div class="sidebar-backdrop" [class.open]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
-
-    <ng-container *ngIf="authService.currentUser$ | async as user; else guestNav">
-      <!-- Right Side Navigation / Sidebar on Mobile -->
-      <div class="nav-container" [class.open]="isMobileMenuOpen">
-        <div class="nav-links">
-          <a routerLink="/task" routerLinkActive="active" class="nav-item">
-            <span class="material-icons">task_alt</span>
-            <span class="nav-text">Tasks</span>
-          </a>
-          <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-            <img [src]="user.picture || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=2b5876&color=fff&size=48'" 
-                 alt="Profile" class="profile-img" />
-            <span class="nav-text">Profile</span>
-          </a>
-        </div>
-        <div class="nav-auth">
-          <a href="javascript:void(0)" (click)="authService.logout(); router.navigate(['/login'])" class="btn-logout">
-            <span class="material-icons" style="font-size: 18px; margin-right: 4px; vertical-align: middle;">logout</span>
-            <span class="nav-text" style="vertical-align: middle;">Logout</span>
-          </a>
-        </div>
-      </div>
-    </ng-container>
-
-    <ng-template #guestNav>
-      <div class="nav-container" [class.open]="isMobileMenuOpen">
-        <div class="nav-auth">
-          <a routerLink="/login" routerLinkActive="active" class="btn-login" (click)="closeMobileMenu()">Login</a>
-          <a routerLink="/sign-up" routerLinkActive="active" class="btn-signup" (click)="closeMobileMenu()">Sign Up</a>
-        </div>
-      </div>
-    </ng-template>
-  </nav>
-</header>
-
-<div *ngIf="isLoading" class="loader-overlay">
-  <div class="spinner">
-    <div class="double-bounce1"></div>
-    <div class="double-bounce2"></div>
   </div>
-</div>
 
-<main class="main-content">
-  <router-outlet></router-outlet>
-</main>
+  <main class="main-content">
+    <ion-router-outlet></ion-router-outlet>
+  </main>
+</ion-app>

@@ -7,11 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { IonInput, IonLabel, IonItem, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, IonInput, IonLabel, IonItem, IonSelect, IonSelectOption, IonButton],
   templateUrl: './input.component.html',
   styleUrl: './input.component.css'
 })

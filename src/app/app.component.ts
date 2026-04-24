@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 
 import { APP_CONSTANTS } from './core/constants/app.constants';
 import { AuthService } from './core/services/auth.service';
 import { NotificationService } from './services/notification.service';
 
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [IonApp, IonRouterOutlet, RouterLink, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

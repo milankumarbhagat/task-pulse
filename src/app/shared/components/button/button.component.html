@@ -1,5 +1,6 @@
-<button [type]="buttonType" [ngClass]="classes" [disabled]="disabled || loading" (click)="onClick()" [name]="buttonName"
-    [id]="id" [class]="class">
+<ion-button [type]="buttonType" [disabled]="disabled || loading" (click)="onClick()" [attr.name]="buttonName"
+    [id]="id" [attr.class]="class" [expand]="'block'"
+    [color]="variant === 'danger' ? 'danger' : (variant === 'secondary' ? 'medium' : 'primary')">
     {{label}}
-    <ng-content></ng-content><!-- It is used to display every thing that put under the customised button such as text, emoji, icons etc. -->
-</button>
+    <ng-content></ng-content>
+</ion-button>

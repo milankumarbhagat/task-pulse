@@ -51,7 +51,8 @@ label {
   padding-left: 3rem;
 }
 
-.custom-input[type="password"], .custom-input.date-picker-input {
+.custom-input[type="password"],
+.custom-input.date-picker-input {
   padding-right: 3rem;
 }
 
@@ -66,7 +67,8 @@ label {
   box-shadow: 0 0 0 4px rgba(78, 67, 118, 0.1);
 }
 
-.password-toggle-btn, .datepicker-toggle {
+.password-toggle-btn,
+.datepicker-toggle {
   position: absolute;
   right: 0.5rem;
   background: none;
@@ -82,12 +84,14 @@ label {
   z-index: 10;
 }
 
-.password-toggle-btn:hover, .datepicker-toggle:hover {
+.password-toggle-btn:hover,
+.datepicker-toggle:hover {
   background-color: #f1f3f5;
   color: #4b5563;
 }
 
-.password-toggle-btn .material-icons, .datepicker-toggle .material-icons {
+.password-toggle-btn .material-icons,
+.datepicker-toggle .material-icons {
   font-size: 20px;
 }
 
