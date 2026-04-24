@@ -75,6 +75,24 @@
         </div>
       </div>
 
+      <!-- Date Range Group -->
+      <div class="filter-row date-range-row">
+        <div class="filter-group">
+          <span class="filter-label">Date Range:</span>
+          <div class="filter-chips" style="align-items: center;">
+            <div class="date-input-wrapper">
+              <span class="material-icons">event</span>
+              <input type="date" [(ngModel)]="filterFromDate" (ngModelChange)="onDateRangeChange()" class="filter-input date-filter" placeholder="From">
+            </div>
+            <span style="color: #6c757d; font-weight: 600; font-size: 0.9rem;">to</span>
+            <div class="date-input-wrapper">
+              <span class="material-icons">event</span>
+              <input type="date" [(ngModel)]="filterToDate" (ngModelChange)="onDateRangeChange()" class="filter-input date-filter" placeholder="To">
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Filter Options Row -->
       <div class="filter-row groups-row">
         <!-- Status Group -->
@@ -126,7 +144,7 @@
       </div>
 
       <div class="filter-footer" style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = []; selectedDay = 'all';" 
+        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = []; selectedDay = 'all'; filterFromDate = ''; filterToDate = '';" 
           style="flex: 1; padding: 0.8rem; border-radius: 12px; border: 1px solid #eef0f2; background: white; color: #6c757d; font-weight: 600; cursor: pointer;">
           Clear All
         </button>
