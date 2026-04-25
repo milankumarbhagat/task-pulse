@@ -1,0 +1,16 @@
+<div class="modal-overlay-container" *ngIf="isOpen" (click)="onBackdropClick()">
+  <div class="modal-backdrop"></div>
+  <div class="modal-dashboard" [style.max-width]="modalWidth" (click)="onModalClick($event)">
+    <div class="modal-header" *ngIf="title || showCloseBtn">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <h3 *ngIf="title" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">{{ title }}</h3>
+        <button class="close-modal-btn" (click)="closeModal()" *ngIf="showCloseBtn" style="background: none; border: none; cursor: pointer; color: #94a3b8; display: flex; align-items: center; justify-content: center;">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
