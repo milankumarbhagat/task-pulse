@@ -349,3 +349,65 @@
     padding: 5rem 0 0 0;
   }
 }
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #2b5876;
+  transform: rotate(15deg);
+}
+
+.theme-toggle-btn .material-icons {
+  font-size: 24px;
+}
+
+/* Dark Theme Header Overrides */
+body.dark-theme .app-header {
+  background: rgba(17, 24, 39, 0.8);
+  border-bottom-color: rgba(75, 85, 99, 0.3);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .brand-text {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+  -webkit-background-clip: text;
+}
+
+body.dark-theme .nav-item {
+  color: #9ca3af;
+}
+
+body.dark-theme .nav-item:hover,
+body.dark-theme .nav-item.active {
+  color: #818cf8;
+}
+
+body.dark-theme .theme-toggle-btn {
+  color: #fbbf24;
+}
+
+body.dark-theme .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fcd34d;
+}
+
+body.dark-theme .nav-container {
+  background: #111827;
+}
+
+body.dark-theme .nav-brand .brand-logo {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}

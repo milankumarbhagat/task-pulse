@@ -83,3 +83,90 @@
   .filter-chips::-webkit-scrollbar { display: none; }
   .filter-chip { flex: 0 0 auto; padding: 6px 14px; font-size: 0.8rem; }
 }
+
+/* Dark Theme Overrides */
+body.dark-theme .task-page-container {
+  background-color: #111827;
+}
+
+body.dark-theme .task-page-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .header-content p {
+  color: #9ca3af;
+}
+
+body.dark-theme .task-card {
+  background: #1f2937;
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .task-card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .task-title {
+  color: #f9fafb;
+}
+
+body.dark-theme .task-desc {
+  color: #9ca3af;
+}
+
+body.dark-theme .task-card-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .due-value {
+  color: #e5e7eb;
+}
+
+body.dark-theme .filter-toggle-btn {
+  background: #1f2937;
+  color: #9ca3af;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .filter-toggle-btn:hover {
+  color: #818cf8;
+}
+
+body.dark-theme .filter-dashboard {
+  background: #1f2937;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .filter-input {
+  background: #111827;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+body.dark-theme .filter-label {
+  color: #e5e7eb;
+}
+
+body.dark-theme .filter-chip {
+  background: #111827;
+  border-color: #374151;
+  color: #9ca3af;
+}
+
+body.dark-theme .filter-chip:hover {
+  background: #1f2937;
+}
+
+body.dark-theme .empty-state {
+  background: rgba(31, 41, 55, 0.5);
+  border-color: #374151;
+}
+
+body.dark-theme .empty-state h3 {
+  color: #f9fafb;
+}
+
+body.dark-theme .empty-state p {
+  color: #9ca3af;
+}

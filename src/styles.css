@@ -369,3 +369,135 @@ body {
     gap: 1rem;
   }
 }
+
+/* Global Dark Theme Styles */
+body.dark-theme {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+  background-color: #374151;
+  border-color: #1f2937;
+}
+
+body.dark-theme .login-container {
+  background-image: radial-gradient(circle at top right, rgba(129, 140, 248, 0.12), transparent 45%),
+    radial-gradient(circle at bottom left, rgba(192, 132, 252, 0.12), transparent 45%);
+}
+
+body.dark-theme .login-card {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: rgba(75, 85, 99, 0.3);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .login-header p {
+  color: #9ca3af;
+}
+
+body.dark-theme .form-group label {
+  color: #d1d5db;
+}
+
+body.dark-theme .input-wrapper input {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+body.dark-theme .input-wrapper input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
+}
+
+body.dark-theme .divider {
+  color: #6b7280;
+}
+
+body.dark-theme .divider::before,
+body.dark-theme .divider::after {
+  border-bottom-color: #374151;
+}
+
+body.dark-theme .signup-prompt {
+  color: #9ca3af;
+}
+
+body.dark-theme .remember-me {
+  color: #d1d5db;
+}
+
+body.dark-theme .forgot-password {
+  color: #818cf8;
+}
+
+body.dark-theme .forgot-password:hover {
+  color: #a5b4fc;
+}
+
+/* Global Dark Theme for Inputs and Components */
+body.dark-theme .custom-input {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+body.dark-theme label {
+  color: #d1d5db !important;
+}
+
+body.dark-theme .prefix-icon, 
+body.dark-theme .password-toggle-btn, 
+body.dark-theme .datepicker-toggle {
+  color: #9ca3af !important;
+}
+
+body.dark-theme .custom-input:focus {
+  background-color: #1f2937 !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15) !important;
+}
+
+body.dark-theme .custom-input:disabled {
+  background-color: #1f2937 !important;
+  border-color: #1f2937 !important;
+  color: #4b5563 !important;
+  opacity: 0.6;
+}
+
+body.dark-theme .password-toggle-btn:hover, 
+body.dark-theme .datepicker-toggle:hover {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+body.dark-theme .mat-mdc-select-value {
+  color: #f9fafb !important;
+}
+
+body.dark-theme .mat-mdc-select-arrow {
+  color: #9ca3af !important;
+}
+
+/* Fix for Material Datepicker Panel in Dark Mode */
+.cdk-overlay-container .mat-datepicker-content {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+body.dark-theme .mat-calendar-body-label,
+body.dark-theme .mat-calendar-period-button,
+body.dark-theme .mat-calendar-table-header,
+body.dark-theme .mat-calendar-body-cell-content {
+  color: #f9fafb !important;
+}
+
+body.dark-theme .mat-calendar-next-button,
+body.dark-theme .mat-calendar-previous-button {
+  color: #9ca3af !important;
+}
