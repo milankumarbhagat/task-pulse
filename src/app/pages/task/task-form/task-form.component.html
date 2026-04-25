@@ -43,7 +43,7 @@
       <div class="form-group custom-input-wrapper">
         <label for="dueDate">Due Date <span class="required">*</span></label>
         <div class="datepicker-container" style="position: relative; display: flex; align-items: center;">
-          <input [matDatepicker]="picker" [min]="minDate" id="dueDate" formControlName="dueDate" class="custom-input" 
+          <input [matDatepicker]="picker" id="dueDate" formControlName="dueDate" class="custom-input" 
             placeholder="Choose a date" (click)="picker.open()" readonly style="cursor: pointer;">
           <mat-datepicker-toggle matSuffix [for]="picker" style="position: absolute; right: 10px;"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

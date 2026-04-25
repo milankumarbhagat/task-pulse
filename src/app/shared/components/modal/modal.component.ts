@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css'
 })
-export class ModalComponent {
+export class ModalComponent implements OnChanges {
   @Input() isOpen: boolean = false;
   @Input() title: string = '';
   @Input() showCloseBtn: boolean = true;
@@ -20,10 +20,26 @@ export class ModalComponent {
 
   constructor(private eRef: ElementRef) {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen']) {
+      if (this.isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    // Ensure scrolling is restored if component is destroyed
+    document.body.style.overflow = 'auto';
+  }
+
   closeModal() {
     this.isOpen = false;
     this.isOpenChange.emit(this.isOpen);
     this.modalClosed.emit();
+    document.body.style.overflow = 'auto';
   }
 
   onBackdropClick() {

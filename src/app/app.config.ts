@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), 
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(), provideServiceWorker('ngsw-worker.js', {
-            enabled: true,
+            enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
           })
   ]
