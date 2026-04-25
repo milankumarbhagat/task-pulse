@@ -7,6 +7,8 @@ import { APP_CONSTANTS } from './core/constants/app.constants';
 import { AuthService } from './core/services/auth.service';
 import { NotificationService } from './services/notification.service';
 
+import { ThemeService } from './core/services/theme.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,7 +26,8 @@ export class AppComponent {
     public router: Router,
     private cdr: ChangeDetectorRef,
     public authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public themeService: ThemeService
   ) {
     if (this.authService.currentUserValue) {
       this.notificationService.subscribeToNotifications();
