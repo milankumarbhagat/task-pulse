@@ -231,3 +231,66 @@
     width: 100%;
   }
 }
+
+/* Dark Theme Overrides */
+body.dark-theme .profile-container {
+  background-color: #111827;
+  background-image: radial-gradient(at 0% 0%, rgba(129, 140, 248, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.08) 0px, transparent 50%);
+}
+
+body.dark-theme .profile-card {
+  background: #1f2937;
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .profile-header h2 {
+  color: #f9fafb;
+}
+
+body.dark-theme .profile-header p {
+  color: #9ca3af;
+}
+
+body.dark-theme .avatar {
+  background: #374151;
+  border-color: #1f2937;
+}
+
+body.dark-theme .edit-avatar-btn {
+  border-color: #1f2937;
+}
+
+body.dark-theme .actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Input Overrides for Profile */
+body.dark-theme :host ::ng-deep .custom-input {
+  background: #111827 !important;
+  border-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+body.dark-theme :host ::ng-deep label {
+  color: #d1d5db !important;
+}
+
+body.dark-theme :host ::ng-deep .prefix-icon {
+  color: #818cf8 !important;
+}
+
+body.dark-theme :host ::ng-deep .custom-input:focus {
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15) !important;
+}
+
+body.dark-theme :host ::ng-deep .mat-mdc-select-value {
+  color: #f9fafb !important;
+}
+
+body.dark-theme :host ::ng-deep .mat-mdc-select-arrow {
+  color: #9ca3af !important;
+}
+
