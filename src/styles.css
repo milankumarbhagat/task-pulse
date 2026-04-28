@@ -370,11 +370,60 @@ body {
   }
 }
 
-/* Global Dark Theme Styles */
+/* Aggressive Dark Mode Overrides */
 body.dark-theme {
-  background-color: #111827;
-  color: #f9fafb;
+  background-color: #020617 !important;
+  color: #f1f5f9 !important;
 }
+
+body.dark-theme .app-layout,
+body.dark-theme .main-wrapper,
+body.dark-theme .content-area,
+body.dark-theme .planner-v2-container,
+body.dark-theme .task-form-container {
+  background-color: #020617 !important;
+  background: #020617 !important;
+}
+
+/* Task List Dark Mode */
+body.dark-theme .v2-greeting h1, 
+body.dark-theme .v2-section-header h3,
+body.dark-theme .v2-item-title { color: #f1f5f9 !important; }
+body.dark-theme .v2-greeting p, 
+body.dark-theme .v2-item-subtitle, 
+body.dark-theme .v2-status-text { color: #94a3b8 !important; }
+body.dark-theme .v2-header-badge { background: rgba(255, 255, 255, 0.05) !important; color: #f1f5f9 !important; }
+body.dark-theme .v2-search-box, 
+body.dark-theme .v2-filter-btn, 
+body.dark-theme .v2-filter-panel, 
+body.dark-theme .v2-item,
+body.dark-theme .v2-empty-results { 
+  background: #0f172a !important; 
+  border-color: rgba(255, 255, 255, 0.05) !important; 
+}
+body.dark-theme .v2-search-box input { background: transparent !important; color: #f1f5f9 !important; }
+body.dark-theme .v2-chip { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; color: #94a3b8 !important; }
+body.dark-theme .v2-tag.list-tag { background: rgba(255, 255, 255, 0.05) !important; color: #cbd5e1 !important; }
+body.dark-theme .v2-add-btn { background: #f1f5f9 !important; color: #0f172a !important; }
+
+/* Task Form Dark Mode */
+body.dark-theme .task-form-card { 
+  background: #0f172a !important; 
+  border-color: rgba(255, 255, 255, 0.05) !important; 
+}
+body.dark-theme .task-form-header h2 { background: linear-gradient(135deg, #fff 0%, #818cf8 100%) !important; -webkit-background-clip: text !important; }
+body.dark-theme .form-group label { color: #f1f5f9 !important; }
+body.dark-theme .custom-input, 
+body.dark-theme .custom-textarea, 
+body.dark-theme .custom-select { 
+  background: rgba(255, 255, 255, 0.03) !important; 
+  border-color: rgba(255, 255, 255, 0.1) !important; 
+  color: #f1f5f9 !important; 
+}
+
+/* Modals Dark Mode */
+body.dark-theme .v2-confirm-modal p { color: #f1f5f9 !important; }
+body.dark-theme .v2-btn-secondary { background: rgba(255, 255, 255, 0.05) !important; color: #94a3b8 !important; }
 
 body.dark-theme ::-webkit-scrollbar-track {
   background: #1f2937;
@@ -484,20 +533,48 @@ body.dark-theme .mat-mdc-select-arrow {
   color: #9ca3af !important;
 }
 
-/* Fix for Material Datepicker Panel in Dark Mode */
+/* Fix for Material Datepicker Panel */
 .cdk-overlay-container .mat-datepicker-content {
-  background-color: #1f2937 !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 16px !important;
+}
+
+.cdk-overlay-container .mat-calendar {
+  background-color: #ffffff !important;
+}
+
+.cdk-overlay-container .mat-calendar-body-label,
+.cdk-overlay-container .mat-calendar-period-button,
+.cdk-overlay-container .mat-calendar-table-header,
+.cdk-overlay-container .mat-calendar-body-cell-content {
+  color: #1e293b !important;
+}
+
+.cdk-overlay-container .mat-calendar-body-cell-content {
+  font-weight: 500 !important;
+}
+
+/* Dark Mode Overrides for Calendar */
+body.dark-theme .cdk-overlay-container .mat-datepicker-content {
+  background-color: #1e293b !important;
+  color: #f9fafb !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-theme .cdk-overlay-container .mat-calendar {
+  background-color: #1e293b !important;
+}
+
+body.dark-theme .cdk-overlay-container .mat-calendar-body-label,
+body.dark-theme .cdk-overlay-container .mat-calendar-period-button,
+body.dark-theme .cdk-overlay-container .mat-calendar-table-header,
+body.dark-theme .cdk-overlay-container .mat-calendar-body-cell-content {
   color: #f9fafb !important;
 }
 
-body.dark-theme .mat-calendar-body-label,
-body.dark-theme .mat-calendar-period-button,
-body.dark-theme .mat-calendar-table-header,
-body.dark-theme .mat-calendar-body-cell-content {
-  color: #f9fafb !important;
-}
-
-body.dark-theme .mat-calendar-next-button,
-body.dark-theme .mat-calendar-previous-button {
+body.dark-theme .cdk-overlay-container .mat-calendar-next-button,
+body.dark-theme .cdk-overlay-container .mat-calendar-previous-button {
   color: #9ca3af !important;
 }

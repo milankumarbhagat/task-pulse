@@ -31,6 +31,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   showFilters: boolean = false;
   readonly TaskStatus = TaskStatus; // Expose to template
   selectedTaskForDescription: Task | null = null;
+  taskToComplete: Task | null = null;
   today = new Date();
   @ViewChild('overdueSlider') overdueSlider!: ElementRef;
   canScrollLeft = false;
@@ -71,11 +72,28 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       const taskDate = new Date(t.dueDate);
       const compareDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
       return compareDate < todayDate;
+    }).sort((a, b) => {
+      if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
+      if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
+      if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
+      if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
+      return this.sortByPriority(a, b);
     });
   }
 
+  get overdueSeverityWidth(): number {
+    return Math.min(this.overdueTasks.length * 20, 100);
+  }
+
   get todayTasks(): Task[] {
-    return this.tasks.filter(t => this.checkDayMatch(t.dueDate, 'today'));
+    return this.tasks.filter(t => this.checkDayMatch(t.dueDate, 'today'))
+      .sort((a, b) => {
+        if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
+        if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
+        if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
+        if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
+        return this.sortByPriority(a, b);
+      });
   }
 
   get inProgressTasks(): Task[] {
@@ -90,6 +108,12 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   get completedTasks(): Task[] {
     return this.todayTasks.filter(t => t.status === TaskStatus.COMPLETED);
+  }
+
+  get todayProgress(): number {
+    if (this.todayTasks.length === 0) return 0;
+    const completed = this.todayTasks.filter(t => t.status === TaskStatus.COMPLETED).length;
+    return Math.round((completed / this.todayTasks.length) * 100);
   }
 
   private sortByPriority(a: Task, b: Task): number {
@@ -131,7 +155,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
       const matchStatus = this.selectedStatuses.length > 0 
         ? this.selectedStatuses.includes(task.status) 
-        : (isFiltering ? true : task.status !== TaskStatus.COMPLETED);
+        : true;
 
       const matchPriority = this.selectedPriorities.length > 0 
         ? this.selectedPriorities.includes(task.priority) 
@@ -162,6 +186,12 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       }
 
       return matchSearch && matchStatus && matchPriority && matchDay && matchCustomDate;
+    }).sort((a, b) => {
+      if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
+      if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
+      if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
+      if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
+      return this.sortByPriority(a, b);
     });
   }
 
@@ -317,6 +347,23 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         error: (error) => console.error('Error deleting task', error)
       });
     }
+  }
+
+  onMarkCompleteClick(event: Event, task: Task): void {
+    event.stopPropagation();
+    if (task.status === TaskStatus.COMPLETED) return;
+    this.taskToComplete = task;
+  }
+
+  confirmComplete(): void {
+    if (this.taskToComplete) {
+      this.markComplete(this.taskToComplete);
+      this.taskToComplete = null;
+    }
+  }
+
+  cancelComplete(): void {
+    this.taskToComplete = null;
   }
 
   markComplete(task: Task): void {
