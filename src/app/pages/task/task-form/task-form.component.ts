@@ -128,22 +128,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   private checkAndDisableDueDate(): void {
-    if (this.isEditMode) {
-      const dueDateValue = this.taskForm.get('dueDate')?.value;
-      if (dueDateValue) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const selectedDate = new Date(dueDateValue);
-        selectedDate.setHours(0, 0, 0, 0);
-
-        if (selectedDate <= today) {
-          this.taskForm.get('dueDate')?.disable();
-        } else {
-          // If it's a future task, keep it unlocked so they can still see the calendar!
-          this.taskForm.get('dueDate')?.enable();
-        }
-      }
-    }
+    this.taskForm.get('dueDate')?.enable();
   }
 
   private formatDateForInput(dateString: string | Date | undefined): string {

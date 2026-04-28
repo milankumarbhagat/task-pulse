@@ -221,3 +221,58 @@
     gap: 0;
   }
 }
+
+/* Dark Theme Overrides */
+body.dark-theme .task-form-card {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .task-form-header h2 {
+  background: linear-gradient(135deg, #fff 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+}
+
+body.dark-theme .task-form-header p {
+  color: #94a3b8;
+}
+
+body.dark-theme .form-group label {
+  color: #f1f5f9;
+}
+
+body.dark-theme .custom-input,
+body.dark-theme .custom-textarea,
+body.dark-theme .custom-select {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+body.dark-theme .custom-input:focus,
+body.dark-theme .custom-textarea:focus,
+body.dark-theme .custom-select:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #6366f1;
+}
+
+body.dark-theme .char-counter {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+body.dark-theme .form-actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .btn-cancel {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+body.dark-theme .btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}

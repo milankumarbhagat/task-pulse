@@ -1,229 +1,247 @@
-<div class="task-page-container">
-  <div class="task-page-header">
-    <div class="header-content">
-      <h2>My Tasks</h2>
-      <p>Manage your daily priorities and stay on track.</p>
+<div class="planner-v2-container">
+  
+  <!-- Header Section -->
+  <div class="v2-header">
+    <div class="v2-greeting">
+      <h1>{{ greeting }}, {{ (authService.currentUser$ | async)?.firstName }}!</h1>
+      <p>{{ today | date: 'EEEE, MMMM d' }}</p>
     </div>
-    <div class="header-actions">
-      <button class="filter-toggle-btn shrink-0" (click)="showFilters = !showFilters"
-        [class.is-open]="showFilters"
-        [class.has-filters]="activeFiltersCount > 0"
-        title="Toggle Filters">
-        <span class="material-icons">tune</span>
-        <span class="filter-badge" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
+    <div class="v2-header-badge">
+      <span>{{ todayTasks.length }} Tasks Due Today</span>
+    </div>
+  </div>
+
+  <!-- Search & Filter Bar (Minimal) -->
+  <div class="v2-toolbar">
+    <div class="v2-search-box">
+      <span class="material-icons">search</span>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search tasks...">
+    </div>
+    <button class="v2-filter-btn" (click)="showFilters = !showFilters" [class.active]="activeFiltersCount > 0">
+      <span class="material-icons">tune</span>
+      <span>Filters</span>  
+      <span class="v2-filter-count" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
+    </button>
+  </div>
+
+  <!-- Filter Panel (Desktop: Inline, Mobile: Modal) -->
+  <!-- Desktop Filter Panel -->
+  <div class="v2-filter-panel hide-mobile" *ngIf="showFilters">
+     <ng-container *ngTemplateOutlet="filterContent"></ng-container>
+  </div>
+
+  <!-- Mobile Filter Modal -->
+  <app-modal [isOpen]="showFilters && isMobile" (isOpenChange)="showFilters = $event" title="Filters" [showCloseBtn]="true">
+     <div class="v2-mobile-filter-container">
+        <ng-container *ngTemplateOutlet="filterContent"></ng-container>
+     </div>
+  </app-modal>
+
+  <ng-template #filterContent>
+     <div class="v2-filter-content">
+       <div class="v2-filter-row">
+         <div class="v2-filter-group">
+           <label>Status</label>
+           <div class="v2-chips">
+              <span class="v2-chip" [class.active]="selectedStatuses.includes('TODO')" (click)="toggleStatusFilter('TODO')">To Do</span>
+              <span class="v2-chip" [class.active]="selectedStatuses.includes('IN_PROGRESS')" (click)="toggleStatusFilter('IN_PROGRESS')">Progress</span>
+              <span class="v2-chip" [class.active]="selectedStatuses.includes('COMPLETED')" (click)="toggleStatusFilter('COMPLETED')">Done</span>
+           </div>
+         </div>
+         <div class="v2-filter-group">
+           <label>Priority</label>
+           <div class="v2-chips">
+              <span class="v2-chip" [class.active]="selectedPriorities.includes('HIGH')" (click)="togglePriorityFilter('HIGH')">High</span>
+              <span class="v2-chip" [class.active]="selectedPriorities.includes('MEDIUM')" (click)="togglePriorityFilter('MEDIUM')">Medium</span>
+              <span class="v2-chip" [class.active]="selectedPriorities.includes('LOW')" (click)="togglePriorityFilter('LOW')">Low</span>
+           </div>
+         </div>
+         <div class="v2-filter-group">
+           <label>Time Period</label>
+           <div class="v2-chips">
+              <span class="v2-chip" [class.active]="selectedDay === 'all'" (click)="setSelectedDay('all')">All Time</span>
+              <span class="v2-chip" [class.active]="selectedDay === 'yesterday'" (click)="setSelectedDay('yesterday')">Yesterday</span>
+              <span class="v2-chip" [class.active]="selectedDay === 'today'" (click)="setSelectedDay('today')">Today</span>
+              <span class="v2-chip" [class.active]="selectedDay === 'tomorrow'" (click)="setSelectedDay('tomorrow')">Tomorrow</span>
+           </div>
+         </div>
+       </div>
+
+       <div class="v2-filter-row" style="margin-top: 1.5rem;">
+         <div class="v2-filter-group">
+           <label>Custom Date Range</label>
+           <div class="v2-date-range">
+              <input type="date" [(ngModel)]="filterFromDate" (ngModelChange)="onDateRangeChange()" class="v2-date-input">
+              <span class="v2-date-sep">to</span>
+              <input type="date" [(ngModel)]="filterToDate" (ngModelChange)="onDateRangeChange()" class="v2-date-input">
+           </div>
+         </div>
+         <button class="v2-clear-btn" (click)="clearFilters()">Clear All</button>
+       </div>
+     </div>
+  </ng-template>
+
+  <!-- Overdue Section (Vertical) -->
+  <div class="v2-section" *ngIf="overdueTasks.length > 0 && isDashboardView">
+    <div class="v2-section-header">
+      <h3>Overdue Tasks</h3>
+      <div class="v2-progress-track">
+        <div class="v2-progress-fill urgent" style="width: 100%;"></div>
+      </div>
+    </div>
+    <div class="v2-list">
+      <div class="v2-item overdue" *ngFor="let task of overdueTasks" (click)="viewDescription(task)">
+        <div class="v2-item-icon">
+          <span class="material-icons">error_outline</span>
+        </div>
+        <div class="v2-item-content">
+          <div class="v2-item-meta">
+            <span class="v2-overdue-label">(Urgent! overdue {{ task.dueDate | date:'MMM d' }})</span>
+          </div>
+          <h4 class="v2-item-title">{{ task.title }}</h4>
+        </div>
+        <div class="v2-item-tags">
+          <span class="v2-tag list-tag">Personal</span>
+          <span class="v2-tag priority-tag" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
+        </div>
+        <div class="v2-item-actions">
+           <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{ task: task }" (click)="$event.stopPropagation()">
+             <span class="material-icons">more_vert</span>
+           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Schedule -->
+  <div class="v2-section" *ngIf="isDashboardView">
+    <div class="v2-section-header">
+      <h3>Today's Schedule</h3>
+      <button class="v2-add-btn" (click)="router.navigate(['/task/add'])">
+        <span class="material-icons">add</span>
+        <span>Add Task</span>
       </button>
-      <button mat-fab class="fab-create-task shrink-0" (click)="onAddTask()">
-        <span class="material-icons" style="font-size: 28px; line-height: 1; margin-top: 5px;">add</span>
-      </button>
     </div>
-  </div>
 
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="spinner"></div>
-    <p>Loading your tasks...</p>
-  </div>
-
-  <div *ngIf="!isLoading && tasks.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <span class="material-icons">fact_check</span>
-    </div>
-    <h3>No tasks found</h3>
-    <p>You don't have any tasks right now. Create one to get started!</p>
-    <task-pulse-button [label]="'Create First Task'" name="create-first-task" (myClicked)="onAddTask()"
-      class="btn-submit" style="width: auto; padding: 0.15rem 0.5rem; display: inline-block;"></task-pulse-button>
-  </div>
-
-  <!-- Filter Overlay Section -->
-  <div class="filter-overlay-container" *ngIf="!isLoading && tasks.length > 0 && showFilters">
-    <div class="filter-backdrop" (click)="showFilters = false"></div>
-    <div class="filter-dashboard">
-      <!-- Search Row -->
-      <div class="filter-row search-row">
-        <div class="search-box">
-          <span class="material-icons search-icon">search</span>
-          <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks by title or description..."
-            class="filter-input">
+    <!-- Group: Personal (Default) -->
+    <div class="v2-group">
+      <div class="v2-group-header">
+        <label>PERSONAL ({{ todayTasks.length }} tasks)</label>
+        <div class="v2-progress-track small">
+           <div class="v2-progress-fill blue" style="width: 40%;"></div>
         </div>
       </div>
 
-      <!-- Timeframe Group -->
-      <div class="filter-row timeframe-row">
-        <div class="filter-group">
-          <span class="filter-label">Timeframe:</span>
-          <div class="filter-chips">
-            <label class="filter-chip" [class.active]="selectedDay === 'all'">
-              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="all">
-              <span class="material-icons">calendar_today</span>
-              <span>All Days</span>
-            </label>
-            <label class="filter-chip" [class.active]="selectedDay === 'yesterday'">
-              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="yesterday">
-              <span class="material-icons">history</span>
-              <span>Yesterday</span>
-            </label>
-            <label class="filter-chip" [class.active]="selectedDay === 'today'">
-              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="today">
-              <span class="material-icons">today</span>
-              <span>Today</span>
-            </label>
-            <label class="filter-chip" [class.active]="selectedDay === 'tomorrow'">
-              <input type="radio" name="dayFilter" [(ngModel)]="selectedDay" value="tomorrow">
-              <span class="material-icons">upcoming</span>
-              <span>Tomorrow</span>
-            </label>
+      <div class="v2-list">
+        <div class="v2-item" *ngFor="let task of todayTasks" (click)="viewDescription(task)">
+          <div class="v2-item-icon">
+            <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-pulse"></span>
+            <span *ngIf="task.status === 'TODO'" class="material-icons">radio_button_unchecked</span>
+            <span *ngIf="task.status === 'COMPLETED'" class="material-icons" style="color: #10b981;">check_circle</span>
+          </div>
+          <div class="v2-item-content">
+            <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
+          </div>
+          <div class="v2-item-meta-right">
+            <span class="v2-status-text">{{ task.status === 'IN_PROGRESS' ? 'Progress' : task.status | titlecase }}</span>
+            <span class="v2-tag priority-tag small" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
+          </div>
+          <div class="v2-item-actions">
+             <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{ task: task }" (click)="$event.stopPropagation()">
+               <span class="material-icons">more_vert</span>
+             </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Date Range Group -->
-      <div class="filter-row date-range-row">
-        <div class="filter-group">
-          <span class="filter-label">Date Range:</span>
-          <div class="filter-chips" style="align-items: center;">
-            <div class="date-input-wrapper">
-              <span class="material-icons">event</span>
-              <input type="date" [(ngModel)]="filterFromDate" (ngModelChange)="onDateRangeChange()" class="filter-input date-filter" placeholder="From">
+  <!-- Filtered Results (Search or Filters active) -->
+  <div class="v2-section" *ngIf="!isDashboardView">
+     <div class="v2-section-header">
+       <h3>Filtered Results</h3>
+       <button class="v2-add-btn" (click)="router.navigate(['/task/add'])">
+         <span class="material-icons">add</span>
+         <span>Add Task</span>
+       </button>
+     </div>
+     <div class="v2-list">
+        <div class="v2-item" *ngFor="let task of filteredTasks" (click)="viewDescription(task)">
+           <div class="v2-item-icon">
+              <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-pulse"></span>
+              <span *ngIf="task.status === 'TODO'" class="material-icons">radio_button_unchecked</span>
+              <span *ngIf="task.status === 'COMPLETED'" class="material-icons" style="color: #10b981;">check_circle</span>
             </div>
-            <span style="color: #6c757d; font-weight: 600; font-size: 0.9rem;">to</span>
-            <div class="date-input-wrapper">
-              <span class="material-icons">event</span>
-              <input type="date" [(ngModel)]="filterToDate" (ngModelChange)="onDateRangeChange()" class="filter-input date-filter" placeholder="To">
+            <div class="v2-item-content">
+              <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
+              <p class="v2-item-subtitle">{{ task.dueDate | date:'MMM d' }} • {{ task.priority | titlecase }}</p>
             </div>
-          </div>
+            <div class="v2-item-actions">
+               <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{ task: task }" (click)="$event.stopPropagation()">
+                 <span class="material-icons">more_vert</span>
+               </button>
+            </div>
         </div>
-      </div>
-
-      <!-- Filter Options Row -->
-      <div class="filter-row groups-row">
-        <!-- Status Group -->
-        <div class="filter-group">
-          <span class="filter-label">Status:</span>
-          <div class="filter-chips">
-            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.TODO)">
-              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.TODO)"
-                (change)="toggleStatus(TaskStatus.TODO)">
-              <span class="material-icons">list_alt</span>
-              <span>To Do</span>
-            </label>
-            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.IN_PROGRESS)">
-              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.IN_PROGRESS)"
-                (change)="toggleStatus(TaskStatus.IN_PROGRESS)">
-              <span class="material-icons">sync</span>
-              <span>In Progress</span>
-            </label>
-            <label class="filter-chip" [class.active]="isStatusSelected(TaskStatus.COMPLETED)">
-              <input type="checkbox" [checked]="isStatusSelected(TaskStatus.COMPLETED)"
-                (change)="toggleStatus(TaskStatus.COMPLETED)">
-              <span class="material-icons">check_circle</span>
-              <span>Completed</span>
-            </label>
-          </div>
+        <div *ngIf="filteredTasks.length === 0" class="v2-empty-results">
+           <span class="material-icons">search_off</span>
+           <p>No tasks found matching your filters.</p>
         </div>
+     </div>
+  </div>
 
-        <!-- Priority Group -->
-        <div class="filter-group">
-          <span class="filter-label">Priority:</span>
-          <div class="filter-chips">
-            <label class="filter-chip priority-chip-high" [class.active]="isPrioritySelected('HIGH')">
-              <input type="checkbox" [checked]="isPrioritySelected('HIGH')" (change)="togglePriority('HIGH')">
-              <span class="material-icons">keyboard_double_arrow_up</span>
-              <span>High</span>
-            </label>
-            <label class="filter-chip priority-chip-medium" [class.active]="isPrioritySelected('MEDIUM')">
-              <input type="checkbox" [checked]="isPrioritySelected('MEDIUM')" (change)="togglePriority('MEDIUM')">
-              <span class="material-icons">drag_handle</span>
-              <span>Medium</span>
-            </label>
-            <label class="filter-chip priority-chip-low" [class.active]="isPrioritySelected('LOW')">
-              <input type="checkbox" [checked]="isPrioritySelected('LOW')" (change)="togglePriority('LOW')">
-              <span class="material-icons">keyboard_double_arrow_down</span>
-              <span>Low</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-footer" style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <button class="btn-clear" (click)="searchQuery = ''; selectedStatuses = []; selectedPriorities = []; selectedDay = 'all'; filterFromDate = ''; filterToDate = '';" 
-          style="flex: 1; padding: 0.8rem; border-radius: 12px; border: 1px solid #eef0f2; background: white; color: #6c757d; font-weight: 600; cursor: pointer;">
-          Clear All
-        </button>
-        <button class="btn-apply" (click)="showFilters = false" 
-          style="flex: 2; padding: 0.8rem; border-radius: 12px; border: none; background: #4f46e5; color: white; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
-          Apply Filters
-        </button>
-      </div>
-      
-      <button class="close-modal-btn" (click)="showFilters = false" 
-        style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: #adb5bd; cursor: pointer;">
-        <span class="material-icons">close</span>
+  <!-- Shared Context Menu -->
+  <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
+    <ng-template matMenuContent let-task="task">
+      <button mat-menu-item (click)="onCloneTask(task)">
+        <span class="material-icons" style="margin-right: 8px;">content_copy</span>
+        <span>Clone</span>
       </button>
-    </div>
-  </div>
+      <button mat-menu-item (click)="onDeleteTask(task?.id)" style="color: #fa5252;">
+        <span class="material-icons" style="margin-right: 8px; color: #fa5252;">delete</span>
+        <span>Delete</span>
+      </button>
+    </ng-template>
+  </mat-menu>
 
-  <div *ngIf="!isLoading && filteredTasks.length === 0 && tasks.length > 0" class="empty-state">
-    <div class="empty-icon">
-      <span class="material-icons">search_off</span>
-    </div>
-    <h3>No matches found</h3>
-    <p>Try clearing your search query or adjusting your filters.</p>
-  </div>
+  <!-- Detail Modal -->
+  <app-modal 
+    [isOpen]="!!selectedTaskForDescription" 
+    (isOpenChange)="!$event ? closeDescription() : null" 
+    [title]="selectedTaskForDescription?.title || 'Task Details'"
+    [showCloseBtn]="true">
+    <div class="task-detail-modal-content">
+      <div class="detail-badges" style="display: flex; gap: 0.8rem; margin: 1.5rem 0;">
+        <span *ngIf="selectedTaskForDescription" class="badge priority-badge" [ngClass]="getPriorityClass(selectedTaskForDescription.priority)">
+          {{ selectedTaskForDescription.priority | titlecase }}
+        </span>
+        <span *ngIf="selectedTaskForDescription" class="badge status-badge" [ngClass]="getStatusClass(selectedTaskForDescription.status)">
+          {{ selectedTaskForDescription.status | titlecase }}
+        </span>
+      </div>
 
-  <div *ngIf="!isLoading && filteredTasks.length > 0" class="task-grid">
-    <div class="task-card" *ngFor="let task of filteredTasks">
-      <div class="task-card-header">
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-right: auto; align-items: center;">
-          <span class="badge priority-badge" [ngClass]="getPriorityClass(task.priority)">
-            <span class="material-icons priority-icon">
-              {{ task.priority === 'HIGH' ? 'keyboard_double_arrow_up' : task.priority === 'MEDIUM' ? 'drag_handle' :
-              'keyboard_double_arrow_down' }}
-            </span>
-            {{ task.priority | titlecase }}
-          </span>
-
-          <span class="badge status-badge" [ngClass]="getStatusClass(task.status)">
-            {{ task.status === 'IN_PROGRESS' ? 'In Progress' : task.status === 'TODO' ? 'To Do' : task.status |
-            titlecase }}
-          </span>
+      <div class="detail-item" style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; margin-bottom: 0.5rem;">Due Date</label>
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: #495057; font-weight: 600;">
+          <span class="material-icons" style="font-size: 18px; color: #4f46e5;">calendar_today</span>
+          {{ selectedTaskForDescription?.dueDate | date: 'EEEE, dd MMM yyyy' }}
         </div>
+      </div>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="action-menu-btn"
-          style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
-          <span class="material-icons" style="font-size: 20px;">more_vert</span>
+      <div class="detail-item">
+        <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; margin-bottom: 0.5rem;">Description</label>
+        <p class="task-description-content" style="color: #495057; line-height: 1.7; font-size: 1.05rem; margin: 0;">
+          {{ selectedTaskForDescription?.description }}
+        </p>
+      </div>
+
+      <div class="modal-footer-actions" style="margin-top: 2.5rem; display: flex; gap: 1rem;">
+        <button class="btn-modal-edit" (click)="onEditTask(selectedTaskForDescription?.id); closeDescription()" 
+          style="flex: 1; padding: 0.9rem; border-radius: 12px; border: none; background: #4f46e5; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+          <span class="material-icons" style="font-size: 20px;">edit</span>
+          Edit Task
         </button>
-        <mat-menu #menu="matMenu" xPosition="before" class="custom-mat-menu">
-          <button mat-menu-item (click)="onEditTask(task.id)">
-            <span class="material-icons" style="margin-right: 8px; font-size: 20px; vertical-align: middle;">edit</span>
-            <span style="font-weight: 500;">Edit</span>
-          </button>
-          <button mat-menu-item (click)="onCloneTask(task)">
-            <span class="material-icons"
-              style="margin-right: 8px; font-size: 20px; vertical-align: middle;">content_copy</span>
-            <span style="font-weight: 500;">Clone</span>
-          </button>
-          <button mat-menu-item (click)="onDeleteTask(task.id)" style="color: #fa5252;">
-            <span class="material-icons"
-              style="margin-right: 8px; color: #fa5252; font-size: 20px; vertical-align: middle;">delete</span>
-            <span style="font-weight: 500;">Delete</span>
-          </button>
-        </mat-menu>
-      </div>
-
-      <div class="task-card-body">
-        <h3 class="task-title" [title]="task.title">{{ task.title }}</h3>
-        <p class="task-desc">{{ task.description.length > 20 ? (task.description | slice:0:150) + '...' :
-          task.description }}</p>
-      </div>
-
-      <div class="task-card-footer">
-        <div class="due-date-info">
-          <span class="due-label">Due Date:</span>
-          <span class="due-value">{{ task.dueDate | date: 'EEE, dd MMM yyyy' }}</span>
-        </div>
-        <div class="due-date-wrapper">
-          <app-due-date-badge [dueDate]="task.dueDate"></app-due-date-badge>
-        </div>
       </div>
     </div>
-  </div>
+  </app-modal>
+
 </div>
