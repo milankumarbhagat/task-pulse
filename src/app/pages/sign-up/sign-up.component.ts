@@ -21,6 +21,7 @@ import { InputComponent } from '../../shared/components/input/input.component';
 import { environment } from '../../../environments/environment';
 
 declare var google: any;
+declare var grecaptcha: any;
 
 @Component({
   selector: 'app-sign-up',
@@ -70,6 +71,19 @@ export class SignUpComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
 
     this.initializeGoogleLogin();
+    this.loadRecaptchaScript();
+  }
+
+  private loadRecaptchaScript(): void {
+    if (document.getElementById('recaptcha-script')) {
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'recaptcha-script';
+    script.src = `https://www.google.com/recaptcha/api.js?render=${environment.recaptchaSiteKey}`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
   }
 
   private initializeGoogleLogin(): void {
@@ -152,20 +166,43 @@ export class SignUpComponent implements OnInit {
     if (this.signUpForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
-      this.authService.signUp(this.signUpForm.value).subscribe({
-        next: (res: any) => {
-          this.isLoading = false;
-          this.router.navigate(['/login']);
-        },
-        error: (err: any) => {
-          this.isLoading = false;
-          console.error(err);
-          this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
-        }
-      });
+      
+      if (typeof grecaptcha !== 'undefined') {
+        grecaptcha.ready(() => {
+          grecaptcha.execute(environment.recaptchaSiteKey, { action: 'signup' }).then((token: string) => {
+            this.ngZone.run(() => {
+              this.proceedWithSignUp(token);
+            });
+          }).catch((err: any) => {
+            this.ngZone.run(() => {
+              this.isLoading = false;
+              this.errorMessage = 'reCAPTCHA verification failed. Please try again.';
+              console.error('reCAPTCHA execute error:', err);
+            });
+          });
+        });
+      } else {
+        this.isLoading = false;
+        this.errorMessage = 'reCAPTCHA script not loaded. Please refresh the page.';
+      }
     } else {
       this.signUpForm.markAllAsTouched();
     }
+  }
+
+  private proceedWithSignUp(recaptchaToken: string): void {
+    const payload = { ...this.signUpForm.value, recaptchaToken };
+    this.authService.signUp(payload).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        this.router.navigate(['/login']);
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        console.error(err);
+        this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
+      }
+    });
   }
 
   verifyEmail() {
