@@ -91,6 +91,21 @@
   background: rgba(99, 102, 241, 0.05);
 }
 
+.v2-filter-open-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #6366f1;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+body.dark-theme .v2-filter-open-indicator {
+  border-color: #0f172a;
+}
+
 /* Filter Panel */
 .v2-filter-panel {
   background: white;
@@ -219,9 +234,21 @@
   max-width: 150px;
 }
 
-.v2-progress-fill { height: 100%; border-radius: 3px; }
-.v2-progress-fill.urgent { background: #ef4444; }
+.v2-progress-fill { height: 100%; border-radius: 3px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.v2-progress-fill.severity-low { background: #fbbf24; }
+.v2-progress-fill.severity-med { background: #f97316; }
+.v2-progress-fill.severity-high { background: #ef4444; }
 .v2-progress-fill.blue { background: #6366f1; }
+
+.pulse-warning {
+  animation: severity-pulse 2s infinite;
+}
+
+@keyframes severity-pulse {
+  0% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
 
 .v2-add-btn {
   margin-left: auto;
@@ -255,6 +282,13 @@
 
 .v2-group-header label span { color: #cbd5e1; }
 
+.v2-progress-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin-left: 0.5rem;
+}
+
 /* Item Layout */
 .v2-list {
   display: flex;
@@ -279,6 +313,32 @@
   border-color: #e2e8f0;
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+}
+
+.v2-item-hover-actions {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem;
+}
+
+.v2-item:hover .v2-item-hover-actions {
+  opacity: 1;
+}
+
+.hover-edit-icon {
+  font-size: 20px;
+  color: #6366f1;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.hover-edit-icon:hover {
+  background: rgba(99, 102, 241, 0.1);
+  transform: scale(1.1);
 }
 
 .v2-item.overdue { border-left: 4px solid #ef4444; }
@@ -404,3 +464,81 @@ body.dark-theme .v2-tag.list-tag { background: rgba(255, 255, 255, 0.05); color:
 body.dark-theme .v2-add-btn { background: #f1f5f9; color: #0f172a; }
 body.dark-theme .v2-date-range { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
 body.dark-theme .v2-date-input { color: #f1f5f9; }
+
+/* Confirmation Modal */
+.v2-confirm-modal {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.v2-confirm-modal .confirm-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.v2-confirm-modal .confirm-icon .material-icons {
+  font-size: 40px;
+}
+
+.v2-confirm-modal p {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+body.dark-theme .v2-confirm-modal p {
+  color: #f1f5f9;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.v2-btn-primary, .v2-btn-secondary {
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.v2-btn-primary {
+  background: #6366f1;
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.v2-btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+}
+
+.v2-btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.v2-btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+body.dark-theme .v2-date-input { color: #f1f5f9; }
+body.dark-theme .v2-empty-results { background: #0f172a; border-color: rgba(255, 255, 255, 0.05); color: #94a3b8; }
+body.dark-theme .v2-status-text { color: #94a3b8; }
+body.dark-theme .v2-progress-track { background: rgba(255, 255, 255, 0.05); }
+body.dark-theme .v2-group-header label { color: #64748b; }
+body.dark-theme .v2-group-header label span { color: #334155; }
+body.dark-theme .hover-edit-icon { background: rgba(129, 140, 248, 0.1); color: #818cf8; }
+
+/* Confirmation Modal */

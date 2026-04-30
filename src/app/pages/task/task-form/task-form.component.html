@@ -27,16 +27,13 @@
       <!-- Description -->
       <div class="form-group custom-textarea-wrapper">
         <div class="label-with-counter">
-          <label for="description">Description <span class="required">*</span></label>
+          <label for="description">Description</label>
           <span class="char-counter" *ngIf="taskForm.get('description')?.value?.length > 0">
             {{ taskForm.get('description')?.value?.length }}/200
           </span>
         </div>
         <textarea id="description" formControlName="description" class="custom-textarea" rows="2" 
           placeholder="Task description..." maxlength="200"></textarea>
-        <div class="error-text" *ngIf="isSubmitted && taskForm.get('description')?.errors?.['required']">
-          Description is required
-        </div>
       </div>
 
       <!-- Due Date -->

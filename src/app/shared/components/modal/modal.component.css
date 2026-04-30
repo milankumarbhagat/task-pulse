@@ -53,7 +53,7 @@
 }
 
 .modal-content {
-  padding: 2rem;
+  padding: 0 2rem 2rem 2rem;
   overflow-y: auto;
   flex: 1;
   background: white;
