@@ -64,6 +64,11 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -77,9 +82,13 @@
             "development": {
               "buildTarget": "task-pulse:build:development",
               "port": 4300
+            },
+            "local": {
+              "buildTarget": "task-pulse:build:local",
+              "port": 4300
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"

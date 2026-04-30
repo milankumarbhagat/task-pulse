@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
   genderOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
-    { label: 'Others', value: 'Others' }
+    { label: 'Others', value: 'Other' }
   ];
   userPicture: string | undefined;
 
