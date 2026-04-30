@@ -105,36 +105,4 @@
   transform: rotate(90deg);
 }
 
-/* Dark Theme Support */
-body.dark-theme .modal-dashboard {
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-body.dark-theme .modal-header {
-  background: #0f172a;
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-theme .modal-header h3 {
-  color: #f1f5f9 !important;
-}
-
-body.dark-theme .modal-content {
-  background: #0f172a;
-  color: #f1f5f9;
-}
-
-body.dark-theme .close-modal-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-body.dark-theme .detail-item label {
-  color: #64748b !important;
-}
-
-body.dark-theme .detail-item div, 
-body.dark-theme .task-description-content {
-  color: #cbd5e1 !important;
-}
+/* Dark Mode Overrides moved to styles.css */
