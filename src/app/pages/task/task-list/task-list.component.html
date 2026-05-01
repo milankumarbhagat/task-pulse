@@ -113,10 +113,9 @@
            <span class="material-icons hover-edit-icon">edit</span>
         </div>
         <div class="v2-item-tags">
-          <span class="v2-status-text" style="margin-right: 0.5rem; font-size: 0.8rem; font-weight: 700; color: #64748b;">
-            {{ task.status === 'IN_PROGRESS' ? 'Progress' : task.status | titlecase }}
+          <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-status-text" style="margin-right: 0.5rem; font-size: 0.8rem; font-weight: 700; color: #64748b;">
+            Progress
           </span>
-          <span class="v2-tag list-tag">Personal</span>
           <span class="v2-tag priority-tag" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
         </div>
         <div class="v2-item-actions">
@@ -162,7 +161,7 @@
              <span class="material-icons hover-edit-icon">edit</span>
           </div>
           <div class="v2-item-meta-right">
-            <span class="v2-status-text">{{ task.status === 'IN_PROGRESS' ? 'Progress' : task.status | titlecase }}</span>
+            <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-status-text">Progress</span>
             <span class="v2-tag priority-tag small" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
           </div>
           <div class="v2-item-actions">
@@ -194,7 +193,7 @@
             <div class="v2-item-content">
               <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
               <p class="v2-item-subtitle">
-                {{ task.status === 'IN_PROGRESS' ? 'Progress' : task.status | titlecase }} • 
+                <span *ngIf="task.status === 'IN_PROGRESS'">Progress • </span>
                 {{ task.dueDate | date:'MMM d' }} • 
                 {{ task.priority | titlecase }}
               </p>

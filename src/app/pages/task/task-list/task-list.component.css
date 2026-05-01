@@ -320,7 +320,9 @@ body.dark-theme .v2-filter-open-indicator {
   transition: opacity 0.2s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   margin: 0 0.5rem;
+  width: 32px;
 }
 
 .v2-item:hover .v2-item-hover-actions {
@@ -350,10 +352,10 @@ body.dark-theme .v2-filter-open-indicator {
 .v2-item-title.completed { text-decoration: line-through; color: #94a3b8; }
 .v2-item-subtitle { margin: 0.2rem 0 0 0; font-size: 0.8rem; color: #94a3b8; font-weight: 500; }
 
-.v2-item-meta-right { display: flex; align-items: center; gap: 1rem; margin-left: 1rem; }
+.v2-item-meta-right { display: flex; align-items: center; gap: 1rem; margin-left: auto; width: 150px; justify-content: flex-end; }
 .v2-status-text { font-size: 0.85rem; font-weight: 600; color: #64748b; }
 
-.v2-item-tags { display: flex; gap: 0.6rem; align-items: center; }
+.v2-item-tags { display: flex; gap: 0.6rem; align-items: center; margin-left: auto; width: 220px; justify-content: flex-end; }
 .v2-tag { padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
 .v2-tag.list-tag { background: #f1f5f9; color: #475569; }
 

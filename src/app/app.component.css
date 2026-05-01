@@ -10,8 +10,8 @@
 .sidebar {
   width: 320px;
   height: 100vh;
-  background: #0f172a; /* Deep navy/slate for that premium look */
-  color: white;
+  background: white;
+  color: #0f172a;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -19,7 +19,7 @@
   top: 0;
   z-index: 1000;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid #e2e8f0;
 }
 
 .sidebar-header {
@@ -51,7 +51,7 @@
   font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #4f46e5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -60,7 +60,7 @@
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: #0f172a;
   cursor: pointer;
 }
 
@@ -70,8 +70,25 @@
   overflow-y: auto;
 }
 
+.sidebar-nav::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+:host-context(.dark-theme) .sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .nav-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .nav-section label {
@@ -90,12 +107,23 @@
   align-items: center;
   gap: 1rem;
   padding: 0.9rem 1.2rem;
-  color: #94a3b8;
+  color: #64748b;
   text-decoration: none;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.2s ease;
   margin-bottom: 0.4rem;
+  position: relative;
+}
+
+.sidebar-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -0.2rem;
+  left: 1.2rem;
+  right: 1.2rem;
+  height: 1px;
+  background: #f1f5f9;
 }
 
 .sidebar-item .material-icons {
@@ -103,9 +131,20 @@
   opacity: 0.8;
 }
 
+.sidebar-divider {
+  border: none;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 1.5rem 1rem;
+}
+
+:host-context(.dark-theme) .sidebar-divider {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  color: white;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .sidebar-item.active {
@@ -129,7 +168,7 @@
 /* Sidebar Footer & Profile */
 .sidebar-footer {
   padding: 2rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -140,14 +179,14 @@
   align-items: center;
   gap: 1rem;
   padding: 0.8rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: #f8fafc;
   border-radius: 16px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .user-profile:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: #e2e8f0;
 }
 
 .user-profile img {
@@ -165,7 +204,7 @@
 .user-name {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #0f172a;
 }
 
 .user-badge {
@@ -185,7 +224,7 @@
   padding: 0.8rem 1.2rem;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -381,47 +420,68 @@
 }
 
 /* Dark Theme Overrides */
-body.dark-theme .app-layout {
+:host-context(.dark-theme) .app-layout {
   background: #020617;
 }
 
-body.dark-theme .mobile-header {
+:host-context(.dark-theme) .mobile-header {
   background: #0f172a;
   border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 
-body.dark-theme .mobile-title {
+:host-context(.dark-theme) .mobile-title {
   color: #f1f5f9;
 }
 
-body.dark-theme .hamburger-btn {
+:host-context(.dark-theme) .hamburger-btn {
   color: #f1f5f9;
 }
 
-body.dark-theme .mobile-header .theme-toggle-btn {
+:host-context(.dark-theme) .mobile-header .theme-toggle-btn {
   background: rgba(255, 255, 255, 0.05);
   color: #fbbf24;
 }
 
-body.dark-theme .brand-text {
+:host-context(.dark-theme) .brand-text {
   background: linear-gradient(135deg, #fff 0%, #818cf8 100%);
   -webkit-background-clip: text;
 }
 
-body.dark-theme .theme-toggle-btn {
+:host-context(.dark-theme) .theme-toggle-btn {
   color: #fbbf24;
 }
 
-body.dark-theme .theme-toggle-btn:hover {
+:host-context(.dark-theme) .theme-toggle-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fcd34d;
 }
 
-body.dark-theme .guest-header {
+:host-context(.dark-theme) .guest-header {
   background: #0f172a;
   border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 
-body.dark-theme .btn-login {
+:host-context(.dark-theme) .btn-login {
   color: #818cf8;
 }
+
+:host-context(.dark-theme) .sidebar {
+  background: #0f172a;
+  color: white;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+:host-context(.dark-theme) .brand-text {
+  background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+:host-context(.dark-theme) .mobile-close-btn { color: white; }
+:host-context(.dark-theme) .sidebar-item { color: #94a3b8; }
+:host-context(.dark-theme) .sidebar-item:hover { background: rgba(255, 255, 255, 0.03); color: white; }
+:host-context(.dark-theme) .sidebar-footer { border-top: 1px solid rgba(255, 255, 255, 0.05); }
+:host-context(.dark-theme) .user-profile { background: rgba(255, 255, 255, 0.03); }
+:host-context(.dark-theme) .user-profile:hover { background: rgba(255, 255, 255, 0.06); }
+:host-context(.dark-theme) .user-name { color: #f1f5f9; }
+:host-context(.dark-theme) .btn-sidebar-logout { color: #94a3b8; }
+:host-context(.dark-theme) .btn-sidebar-logout:hover { color: #ef4444; }
+:host-context(.dark-theme) .sidebar-item:not(:last-child)::after { background: rgba(255, 255, 255, 0.05); }
