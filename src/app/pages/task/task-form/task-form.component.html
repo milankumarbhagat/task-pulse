@@ -50,8 +50,8 @@
         </div>
       </div>
 
-      <div *ngIf="taskForm.get('dueDate')?.value" class="date-preview" style="margin-top: -10px; margin-bottom: 10px;">
-        <span style="font-size: 0.85rem; color: #666; margin-right: 8px;">Status Preview:</span>
+      <div *ngIf="taskForm.get('dueDate')?.value" class="date-preview">
+        <span class="preview-label">Status Preview:</span>
         <app-due-date-badge [dueDate]="taskForm.get('dueDate')?.value"></app-due-date-badge>
       </div>
 

@@ -301,6 +301,16 @@ body {
   text-decoration: underline;
 }
 
+/* Task Details Modal Styles */
+.detail-item { margin-bottom: 1.5rem; }
+.detail-label { display: block; font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; margin-bottom: 0.5rem; }
+.detail-value { display: flex; align-items: center; gap: 0.5rem; color: #495057; font-weight: 600; }
+.detail-icon { font-size: 18px; color: #4f46e5; }
+.task-description-content { color: #495057; line-height: 1.7; font-size: 1.05rem; margin: 0; }
+.modal-footer-actions { margin-top: 2.5rem; display: flex; gap: 1rem; }
+.btn-modal-edit { flex: 1; padding: 0.9rem; border-radius: 12px; border: none; background: #4f46e5; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); transition: all 0.2s ease; }
+.btn-modal-edit:hover { background: #4338ca; transform: translateY(-2px); }
+
 /* Snackbar styles */
 .success-snackbar .mdc-snackbar__surface {
   background-color: #4caf50 !important;
@@ -374,13 +384,25 @@ body {
 body.dark-theme {
   background-color: #020617 !important;
   color: #f1f5f9 !important;
+  color-scheme: dark;
+}
+
+/* Select Dropdown Dark Mode Fix */
+body.dark-theme select.custom-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 1.25rem !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 body.dark-theme .app-layout,
 body.dark-theme .main-wrapper,
 body.dark-theme .content-area,
 body.dark-theme .planner-v2-container,
-body.dark-theme .task-form-container {
+body.dark-theme .task-form-container,
+body.dark-theme .profile-container {
   background-color: #020617 !important;
   background: #020617 !important;
 }
@@ -421,9 +443,73 @@ body.dark-theme .custom-select {
   color: #f1f5f9 !important; 
 }
 
-/* Modals Dark Mode */
+/* Character Counter Dark Mode */
+.char-counter { transition: all 0.2s ease; }
+body.dark-theme .char-counter {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+}
+
+/* Date Preview label */
+.date-preview { margin-top: -10px; margin-bottom: 10px; display: flex; align-items: center; }
+.preview-label { font-size: 0.85rem; color: #64748b; margin-right: 8px; font-weight: 600; }
+body.dark-theme .preview-label { color: #94a3b8 !important; }
+
+/* Due Date Badge Dark Mode */
+body.dark-theme .badge.overdue { background: rgba(239, 68, 68, 0.1) !important; color: #f87171 !important; border-color: rgba(239, 68, 68, 0.2) !important; }
+body.dark-theme .badge.due-today { background: rgba(245, 158, 11, 0.1) !important; color: #fbbf24 !important; border-color: rgba(245, 158, 11, 0.2) !important; }
+body.dark-theme .badge.due-soon { background: rgba(59, 130, 246, 0.1) !important; color: #60a5fa !important; border-color: rgba(59, 130, 246, 0.2) !important; }
+body.dark-theme .badge.on-track { background: rgba(34, 197, 94, 0.1) !important; color: #4ade80 !important; border-color: rgba(34, 197, 94, 0.2) !important; }
+
+/* Modals & Details Dark Mode */
+body.dark-theme .modal-dashboard,
+body.dark-theme .modal-header,
+body.dark-theme .modal-content {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .modal-dashboard {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-theme .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-theme .modal-header h3 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .close-modal-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
 body.dark-theme .v2-confirm-modal p { color: #f1f5f9 !important; }
 body.dark-theme .v2-btn-secondary { background: rgba(255, 255, 255, 0.05) !important; color: #94a3b8 !important; }
+body.dark-theme .detail-value { color: #e2e8f0 !important; }
+body.dark-theme .task-description-content { color: #94a3b8 !important; }
+body.dark-theme .detail-label { color: #64748b !important; }
+
+/* Profile Page Dark Mode */
+body.dark-theme .profile-card { background: #0f172a !important; border-color: rgba(255, 255, 255, 0.05) !important; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important; }
+body.dark-theme .profile-header h2 { color: #f1f5f9 !important; }
+body.dark-theme .profile-header p { color: #94a3b8 !important; }
+body.dark-theme .avatar { background: #1e293b !important; border-color: #0f172a !important; }
+body.dark-theme .edit-avatar-btn { border-color: #0f172a !important; }
+body.dark-theme .form-section-title { color: #818cf8 !important; }
+body.dark-theme .actions { border-top-color: rgba(255, 255, 255, 0.05) !important; }
+
+/* Material Menu Dark Mode */
+body.dark-theme .cdk-overlay-container .mat-mdc-menu-panel {
+  background-color: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+body.dark-theme .cdk-overlay-container .mat-mdc-menu-item { color: #e2e8f0 !important; }
+body.dark-theme .cdk-overlay-container .mat-mdc-menu-item .material-icons { color: #94a3b8 !important; }
 
 body.dark-theme ::-webkit-scrollbar-track {
   background: #1f2937;
@@ -439,10 +525,13 @@ body.dark-theme .login-container {
     radial-gradient(circle at bottom left, rgba(192, 132, 252, 0.12), transparent 45%);
 }
 
-body.dark-theme .login-card {
-  background: rgba(31, 41, 55, 0.8);
-  border-color: rgba(75, 85, 99, 0.3);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+body.dark-theme .login-card,
+body.dark-theme .forgot-card,
+body.dark-theme .reset-card,
+body.dark-theme .signup-card {
+  background: rgba(31, 41, 55, 0.8) !important;
+  border-color: rgba(75, 85, 99, 0.3) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.dark-theme .login-header p {
@@ -490,7 +579,9 @@ body.dark-theme .forgot-password:hover {
 }
 
 /* Global Dark Theme for Inputs and Components */
-body.dark-theme .custom-input {
+body.dark-theme .custom-input, 
+body.dark-theme .custom-textarea, 
+body.dark-theme .custom-select {
   background-color: #111827 !important;
   border-color: #374151 !important;
   color: #f9fafb !important;
@@ -502,11 +593,14 @@ body.dark-theme label {
 
 body.dark-theme .prefix-icon, 
 body.dark-theme .password-toggle-btn, 
-body.dark-theme .datepicker-toggle {
-  color: #9ca3af !important;
+body.dark-theme .datepicker-toggle,
+body.dark-theme button[mat-icon-button] {
+  color: #f1f5f9 !important;
 }
 
-body.dark-theme .custom-input:focus {
+body.dark-theme .custom-input:focus,
+body.dark-theme .custom-textarea:focus,
+body.dark-theme .custom-select:focus {
   background-color: #1f2937 !important;
   border-color: #818cf8 !important;
   box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15) !important;
@@ -519,62 +613,235 @@ body.dark-theme .custom-input:disabled {
   opacity: 0.6;
 }
 
-body.dark-theme .password-toggle-btn:hover, 
-body.dark-theme .datepicker-toggle:hover {
-  background-color: #374151 !important;
-  color: #f9fafb !important;
+/* Guest Header Dark Mode */
+body.dark-theme .guest-header {
+  background: #0f172a !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-body.dark-theme .mat-mdc-select-value {
-  color: #f9fafb !important;
+body.dark-theme .guest-header .brand-text {
+  background: linear-gradient(135deg, #fff 0%, #818cf8 100%) !important;
+  -webkit-background-clip: text !important;
 }
 
-body.dark-theme .mat-mdc-select-arrow {
-  color: #9ca3af !important;
+/* Character Counter Dark Mode */
+.char-counter { transition: all 0.2s ease; z-index: 5; }
+body.dark-theme .char-counter {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f1f5f9 !important; /* Brighter for visibility */
 }
 
-/* Fix for Material Datepicker Panel */
-.cdk-overlay-container .mat-datepicker-content {
-  background-color: #ffffff !important;
-  color: #1e293b !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 16px !important;
-}
+/* Date Preview label */
+.date-preview { margin-top: -10px; margin-bottom: 10px; display: flex; align-items: center; }
+.preview-label { font-size: 0.85rem; color: #64748b; margin-right: 8px; font-weight: 600; }
+body.dark-theme .preview-label { color: #94a3b8 !important; }
 
-.cdk-overlay-container .mat-calendar {
-  background-color: #ffffff !important;
-}
+/* Due Date Badge Dark Mode - MORE VIBRANT */
+body.dark-theme .badge.overdue { background: rgba(239, 68, 68, 0.2) !important; color: #ff8787 !important; border-color: rgba(239, 68, 68, 0.3) !important; }
+body.dark-theme .badge.due-today { background: rgba(245, 158, 11, 0.2) !important; color: #ffc034 !important; border-color: rgba(245, 158, 11, 0.3) !important; }
+body.dark-theme .badge.due-soon { background: rgba(59, 130, 246, 0.2) !important; color: #74b0ff !important; border-color: rgba(59, 130, 246, 0.3) !important; }
+body.dark-theme .badge.on-track { background: rgba(34, 197, 94, 0.2) !important; color: #69db7c !important; border-color: rgba(34, 197, 94, 0.3) !important; }
 
-.cdk-overlay-container .mat-calendar-body-label,
-.cdk-overlay-container .mat-calendar-period-button,
-.cdk-overlay-container .mat-calendar-table-header,
-.cdk-overlay-container .mat-calendar-body-cell-content {
-  color: #1e293b !important;
-}
-
-.cdk-overlay-container .mat-calendar-body-cell-content {
-  font-weight: 500 !important;
-}
-
-/* Dark Mode Overrides for Calendar */
-body.dark-theme .cdk-overlay-container .mat-datepicker-content {
+/* Select Options Dark Mode */
+body.dark-theme select.custom-select option {
   background-color: #1e293b !important;
-  color: #f9fafb !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Material Calendar Premium Dark Mode */
+body.dark-theme .cdk-overlay-container .mat-datepicker-content {
+  background-color: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
 }
 
 body.dark-theme .cdk-overlay-container .mat-calendar {
-  background-color: #1e293b !important;
+  background-color: #0f172a !important;
 }
 
 body.dark-theme .cdk-overlay-container .mat-calendar-body-label,
 body.dark-theme .cdk-overlay-container .mat-calendar-period-button,
 body.dark-theme .cdk-overlay-container .mat-calendar-table-header,
 body.dark-theme .cdk-overlay-container .mat-calendar-body-cell-content {
-  color: #f9fafb !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .cdk-overlay-container .mat-calendar-body-selected {
+  background-color: #4f46e5 !important;
+  color: white !important;
 }
 
 body.dark-theme .cdk-overlay-container .mat-calendar-next-button,
 body.dark-theme .cdk-overlay-container .mat-calendar-previous-button {
-  color: #9ca3af !important;
+  color: #94a3b8 !important;
+}
+
+/* Forgot Password Dark Mode */
+body.dark-theme .forgot-header h2,
+body.dark-theme .forgot-header p,
+body.dark-theme .success-content h3,
+body.dark-theme .success-content p,
+body.dark-theme .back-link {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .icon-circle {
+  background: rgba(129, 140, 248, 0.1) !important;
+  color: #818cf8 !important;
+}
+
+/* Material Radio Buttons Dark Mode */
+body.dark-theme .mat-mdc-radio-button .mdc-radio__outer-circle {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+body.dark-theme .mat-mdc-radio-button.mat-mdc-radio-checked .mdc-radio__outer-circle {
+  border-color: #6366f1 !important;
+}
+
+body.dark-theme .mat-mdc-radio-button .mdc-label {
+  color: #f1f5f9 !important;
+}
+
+/* Material Select Panel Dark Mode */
+.cdk-overlay-container .mat-mdc-select-panel {
+  background-color: #0f172a !important;
+}
+
+body.dark-theme .mat-mdc-option {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+body.dark-theme .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Material Form Field Prefix Icon */
+body.dark-theme .mat-mdc-form-field .mat-icon {
+  color: #94a3b8 !important;
+}
+
+/* Filter Date Range Inputs - FINAL FIX */
+body.dark-theme .v2-date-input,
+body.dark-theme .v2-date-range input,
+body.dark-theme input[type="date"].v2-date-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-color: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+  color-scheme: dark !important;
+}
+
+/* Material Calendar Numbers Visibility */
+body.dark-theme .mat-calendar-body-cell-content,
+body.dark-theme .mat-calendar-body-label,
+body.dark-theme .mat-calendar-table-header,
+body.dark-theme .mat-calendar-table-header th,
+body.dark-theme .mat-calendar-period-button,
+body.dark-theme .mat-calendar-next-button,
+body.dark-theme .mat-calendar-previous-button {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #818cf8 !important;
+}
+
+/* Occupation Field (Material Select) Final Fix */
+body.dark-theme .mat-mdc-text-field-wrapper,
+body.dark-theme .mat-mdc-form-field-flex,
+body.dark-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+body.dark-theme .mat-mdc-form-field-infix,
+body.dark-theme .mat-mdc-select-value,
+body.dark-theme .mat-mdc-select-arrow,
+body.dark-theme .mat-mdc-form-field-label {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-mdc-form-field-outline {
+  color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modern Auth Card (Login/Signup) */
+body.dark-theme .login-card, 
+body.dark-theme .forgot-card, 
+body.dark-theme .reset-card, 
+body.dark-theme .signup-card {
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-theme .signup-prompt a,
+body.dark-theme .login-prompt a,
+body.dark-theme .forgot-password,
+body.dark-theme .back-link {
+  color: #818cf8 !important;
+}
+
+body.dark-theme .divider span {
+  background: #0f172a !important;
+  color: #64748b !important;
+}
+
+body.dark-theme .divider::before {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+/* FINAL NUCLEAR DARK MODE OVERRIDES - FORCE EVERYTHING */
+body.dark-theme input.v2-date-input,
+body.dark-theme .v2-date-range input {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    color: white !important;
+}
+
+body.dark-theme .mat-mdc-text-field-wrapper,
+body.dark-theme .mat-mdc-form-field-flex,
+body.dark-theme .occupation-wrapper .mat-mdc-form-field {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-theme .mat-calendar-body-cell-content {
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-calendar-table-header th {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .mat-calendar-period-button,
+body.dark-theme .mat-calendar-next-button,
+body.dark-theme .mat-calendar-previous-button {
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .preview-label {
+    color: #94a3b8 !important;
+}
+
+/* Fix for the white pill container in Date Range Filter */
+body.dark-theme .v2-date-range {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 4px 12px !important;
+    border-radius: 12px !important;
+}
+
+body.dark-theme .v2-date-input {
+    background: transparent !important;
+    border: none !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .v2-date-sep {
+    color: #64748b !important;
 }
