@@ -55,6 +55,10 @@
               "serviceWorker": "ngsw-config.json"
             },
             "development": {
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -69,6 +73,19 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "staging": {
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"
@@ -78,6 +95,9 @@
           "configurations": {
             "production": {
               "buildTarget": "task-pulse:build:production"
+            },
+            "staging": {
+              "buildTarget": "task-pulse:build:staging"
             },
             "development": {
               "buildTarget": "task-pulse:build:development",
