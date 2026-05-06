@@ -8,6 +8,7 @@ import { AuthService } from './core/services/auth.service';
 import { NotificationService } from './services/notification.service';
 
 import { ThemeService } from './core/services/theme.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ import { ThemeService } from './core/services/theme.service';
 })
 export class AppComponent {
   appName = APP_CONSTANTS.APP_NAME;
+  logoUrl = environment.logoUrl;
   isLoading = false;
   private minLoaderDuration = 300; // minimum 500ms to show the beautiful loader
   private loaderStartTime = 0;
