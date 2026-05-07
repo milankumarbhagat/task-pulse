@@ -445,7 +445,8 @@ body.dark-theme .v2-empty-results {
   border-color: rgba(255,255,255,0.05) !important; 
 }
 body.dark-theme .v2-search-box input { background: transparent !important; color: #f9fafb !important; }
-body.dark-theme .v2-chip { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.08) !important; color: #6b7280 !important; }
+body.dark-theme .v2-chip { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #6b7280; }
+body.dark-theme .v2-chip.active { background: #6366f1 !important; color: white !important; border-color: #6366f1 !important; }
 body.dark-theme .v2-tag.list-tag { background: rgba(255,255,255,0.05) !important; color: #9ca3af !important; }
 body.dark-theme .v2-add-btn { background: #4f46e5 !important; color: white !important; }
 

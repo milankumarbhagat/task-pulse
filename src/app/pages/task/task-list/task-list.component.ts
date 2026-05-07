@@ -10,6 +10,8 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { DueDateBadgeComponent } from '../../../shared/components/due-date-badge/due-date-badge.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { AuthService } from '../../../core/services/auth.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-task-list',
@@ -37,207 +39,6 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   canScrollLeft = false;
   canScrollRight = true;
 
-  scrollSlider(direction: number): void {
-    if (this.overdueSlider) {
-      const scrollAmount = 250;
-      this.overdueSlider.nativeElement.scrollBy({
-        left: direction * scrollAmount,
-        behavior: 'smooth'
-      });
-      // Visibility will be updated via the scroll event listener
-    }
-  }
-
-  onSliderScroll(): void {
-    this.updateArrowVisibility();
-  }
-
-  updateArrowVisibility(): void {
-    if (this.overdueSlider) {
-      const element = this.overdueSlider.nativeElement;
-      this.canScrollLeft = element.scrollLeft > 5; // Use 5px buffer
-      this.canScrollRight = element.scrollLeft + element.clientWidth < element.scrollWidth - 5;
-    }
-  }
-
-  ngAfterViewInit() {
-    // Initial check after view is initialized
-    setTimeout(() => this.updateArrowVisibility(), 500);
-  }
-
-  get overdueTasks(): Task[] {
-    const todayDate = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()).getTime();
-    return this.tasks.filter(t => {
-      if (!t.dueDate || t.status === TaskStatus.COMPLETED) return false;
-      const taskDate = new Date(t.dueDate);
-      const compareDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
-      return compareDate < todayDate;
-    }).sort((a, b) => {
-      if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
-      if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
-      if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
-      if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
-      return this.sortByPriority(a, b);
-    });
-  }
-
-  get overdueSeverityWidth(): number {
-    return Math.min(this.overdueTasks.length * 20, 100);
-  }
-
-  get todayTasks(): Task[] {
-    return this.tasks.filter(t => this.checkDayMatch(t.dueDate, 'today'))
-      .sort((a, b) => {
-        if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
-        if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
-        if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
-        if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
-        return this.sortByPriority(a, b);
-      });
-  }
-
-  get inProgressTasks(): Task[] {
-    return this.todayTasks.filter(t => t.status === TaskStatus.IN_PROGRESS)
-      .sort((a, b) => this.sortByPriority(a, b));
-  }
-
-  get todoTasks(): Task[] {
-    return this.todayTasks.filter(t => t.status === TaskStatus.TODO)
-      .sort((a, b) => this.sortByPriority(a, b));
-  }
-
-  get completedTasks(): Task[] {
-    return this.todayTasks.filter(t => t.status === TaskStatus.COMPLETED);
-  }
-
-  get todayProgress(): number {
-    if (this.todayTasks.length === 0) return 0;
-    const completed = this.todayTasks.filter(t => t.status === TaskStatus.COMPLETED).length;
-    return Math.round((completed / this.todayTasks.length) * 100);
-  }
-
-  private sortByPriority(a: Task, b: Task): number {
-    const priorityWeight = { 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1 };
-    return (priorityWeight[b.priority as keyof typeof priorityWeight] || 0) - 
-           (priorityWeight[a.priority as keyof typeof priorityWeight] || 0);
-  }
-
-  get isTodayView(): boolean {
-    return this.selectedDay === 'today';
-  }
-
-  get activeFiltersCount(): number {
-    let count = 0;
-    if (this.searchQuery.trim()) count++;
-    if (this.selectedDay !== 'today') count++;
-    if (this.filterFromDate) count++;
-    if (this.filterToDate) count++;
-    count += this.selectedStatuses.length;
-    count += this.selectedPriorities.length;
-    return count;
-  }
-
-  get isMobile(): boolean {
-    return window.innerWidth <= 768;
-  }
-
-  get isDashboardView(): boolean {
-    return !this.searchQuery && this.selectedDay === 'today' && !this.filterFromDate && !this.filterToDate && this.selectedStatuses.length === 0 && this.selectedPriorities.length === 0;
-  }
-
-  get filteredTasks(): Task[] {
-    return this.tasks.filter(task => {
-      const matchSearch = task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-                          (task.description && task.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
-      
-      const isDateRangeSelected = !!(this.filterFromDate || this.filterToDate);
-      const isFiltering = this.searchQuery || isDateRangeSelected || this.selectedStatuses.length > 0 || this.selectedPriorities.length > 0 || this.selectedDay !== 'today';
-
-      const matchStatus = this.selectedStatuses.length > 0 
-        ? this.selectedStatuses.includes(task.status) 
-        : true;
-
-      const matchPriority = this.selectedPriorities.length > 0 
-        ? this.selectedPriorities.includes(task.priority) 
-        : true;
-
-      const matchDay = (this.searchQuery || isDateRangeSelected || this.selectedDay === 'all') 
-        ? true 
-        : this.checkDayMatch(task.dueDate, this.selectedDay);
-
-      let matchCustomDate = true;
-      if (task.dueDate && isDateRangeSelected) {
-        const taskDate = new Date(task.dueDate);
-        const compareTaskDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
-
-        if (this.filterFromDate) {
-          const [y, m, d] = this.filterFromDate.split('-');
-          const compareFrom = new Date(Number(y), Number(m) - 1, Number(d)).getTime();
-          if (compareTaskDate < compareFrom) matchCustomDate = false;
-        }
-
-        if (matchCustomDate && this.filterToDate) {
-          const [y, m, d] = this.filterToDate.split('-');
-          const compareTo = new Date(Number(y), Number(m) - 1, Number(d)).getTime();
-          if (compareTaskDate > compareTo) matchCustomDate = false;
-        }
-      } else if (!task.dueDate && isDateRangeSelected) {
-        matchCustomDate = false;
-      }
-
-      return matchSearch && matchStatus && matchPriority && matchDay && matchCustomDate;
-    }).sort((a, b) => {
-      if (a.status === TaskStatus.COMPLETED && b.status !== TaskStatus.COMPLETED) return 1;
-      if (a.status !== TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) return -1;
-      if (a.status === TaskStatus.IN_PROGRESS && b.status !== TaskStatus.IN_PROGRESS) return -1;
-      if (a.status !== TaskStatus.IN_PROGRESS && b.status === TaskStatus.IN_PROGRESS) return 1;
-      return this.sortByPriority(a, b);
-    });
-  }
-
-  private checkDayMatch(dueDate: any, filter: string): boolean {
-    if (filter === 'all' || !dueDate) return filter === 'all';
-
-    const taskDate = new Date(dueDate);
-    const today = new Date();
-    
-    // Reset time for comparison
-    const compareDate = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
-    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-    
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    switch (filter) {
-      case 'yesterday':
-        return compareDate === todayDate - oneDay;
-      case 'today':
-        return compareDate === todayDate;
-      case 'tomorrow':
-        return compareDate === todayDate + oneDay;
-      default:
-        return true;
-    }
-  }
-
-  onDateRangeChange(): void {
-    if (this.filterFromDate && this.filterToDate) {
-      const [fy, fm, fd] = this.filterFromDate.split('-');
-      const from = new Date(Number(fy), Number(fm) - 1, Number(fd));
-      
-      const [ty, tm, td] = this.filterToDate.split('-');
-      const to = new Date(Number(ty), Number(tm) - 1, Number(td));
-
-      if (from > to) {
-        from.setDate(from.getDate() + 1);
-        const ny = from.getFullYear();
-        const nm = String(from.getMonth() + 1).padStart(2, '0');
-        const nd = String(from.getDate()).padStart(2, '0');
-        this.filterToDate = `${ny}-${nm}-${nd}`;
-      }
-    }
-    this.saveFilters();
-  }
-
   get greeting(): string {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good Morning';
@@ -245,11 +46,29 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     return 'Good Evening';
   }
 
+  scrollSlider(direction: number): void {
+    if (this.overdueSlider) {
+      const scrollAmount = 250;
+      this.overdueSlider.nativeElement.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  updateScrollButtons(): void {
+    if (this.overdueSlider) {
+      const el = this.overdueSlider.nativeElement;
+      this.canScrollLeft = el.scrollLeft > 0;
+      this.canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
+    }
+  }
+
   constructor(
-    private taskService: TaskService, 
-    public router: Router, 
-    private eRef: ElementRef,
-    public authService: AuthService
+    public authService: AuthService,
+    private taskService: TaskService,
+    public router: Router,
+    private eRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -257,8 +76,12 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     this.loadTasks();
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => this.updateScrollButtons(), 500);
+  }
+
   private saveFilters(): void {
-    const filterState = {
+    const state = {
       searchQuery: this.searchQuery,
       selectedStatuses: this.selectedStatuses,
       selectedPriorities: this.selectedPriorities,
@@ -266,7 +89,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       filterFromDate: this.filterFromDate,
       filterToDate: this.filterToDate
     };
-    localStorage.setItem('task_filters', JSON.stringify(filterState));
+    localStorage.setItem('task_filters', JSON.stringify(state));
   }
 
   private loadFilters(): void {
@@ -296,12 +119,8 @@ export class TaskListComponent implements OnInit, AfterViewInit {
           const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
           const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
           
-          // 1. Sort by Due Date (earliest earliest)
-          if (dateA !== dateB) {
-            return dateA - dateB;
-          }
+          if (dateA !== dateB) return dateA - dateB;
           
-          // 2. Sort by Priority (HIGH > MEDIUM > LOW)
           const weightA = priorityWeight[a.priority as keyof typeof priorityWeight] || 0;
           const weightB = priorityWeight[b.priority as keyof typeof priorityWeight] || 0;
           
@@ -380,9 +199,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   toggleStatusFilter(status: string): void {
     const index = this.selectedStatuses.indexOf(status);
     if (index === -1) {
-      this.selectedStatuses.push(status);
+      this.selectedStatuses = [...this.selectedStatuses, status];
     } else {
-      this.selectedStatuses.splice(index, 1);
+      this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
     }
     this.saveFilters();
   }
@@ -390,9 +209,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   togglePriorityFilter(priority: string): void {
     const index = this.selectedPriorities.indexOf(priority);
     if (index === -1) {
-      this.selectedPriorities.push(priority);
+      this.selectedPriorities = [...this.selectedPriorities, priority];
     } else {
-      this.selectedPriorities.splice(index, 1);
+      this.selectedPriorities = this.selectedPriorities.filter(p => p !== priority);
     }
     this.saveFilters();
   }
@@ -406,13 +225,17 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     this.saveFilters();
   }
 
+  onDateRangeChange(): void {
+    this.saveFilters();
+  }
+
   clearFilters(): void {
     this.searchQuery = '';
     this.selectedStatuses = [];
     this.selectedPriorities = [];
     this.filterFromDate = '';
     this.filterToDate = '';
-    this.selectedDay = 'today';
+    this.selectedDay = 'all';
     this.saveFilters();
   }
 
@@ -424,11 +247,287 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     return `priority-${priority.toLowerCase()}`;
   }
 
+  exportToPDF(): void {
+    const doc = new jsPDF();
+    const tasksToExport = this.tasks;
+    
+    doc.setFontSize(18);
+    doc.text('Task Pulse - Task Report', 14, 20);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    
+    const tableData = tasksToExport.map(task => [
+      task.title,
+      task.status,
+      task.priority,
+      task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No Date',
+      task.description || 'N/A'
+    ]);
+
+    autoTable(doc, {
+      head: [['Title', 'Status', 'Priority', 'Due Date', 'Description']],
+      body: tableData,
+      startY: 40,
+      theme: 'grid',
+      headStyles: { fillColor: [79, 70, 229] },
+      styles: { fontSize: 9 }
+    });
+
+    doc.save('task-pulse-export.pdf');
+  }
+
+  triggerImport(): void {
+    const fileInput = document.getElementById('importFileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  private parseDueDate(dateStr: string): string {
+    if (!dateStr) return new Date().toISOString();
+    
+    // Check for DD/MM/YYYY format
+    const ddmmyyyyRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    const match = dateStr.trim().match(ddmmyyyyRegex);
+    if (match) {
+      const day = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10) - 1;
+      const year = parseInt(match[3], 10);
+      const date = new Date(year, month, day);
+      if (!isNaN(date.getTime())) {
+        return date.toISOString();
+      }
+    }
+    
+    // Fallback to default parsing
+    const fallbackDate = new Date(dateStr);
+    return isNaN(fallbackDate.getTime()) ? new Date().toISOString() : fallbackDate.toISOString();
+  }
+
+  importTasks(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const content = e.target.result;
+      const trimmedContent = content.trim();
+      try {
+        let importedTasks: any[] = [];
+
+        // Try JSON first if it looks like JSON
+        if (trimmedContent.startsWith('[') || trimmedContent.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(trimmedContent);
+            importedTasks = Array.isArray(parsed) ? parsed : [parsed];
+          } catch (jsonErr) {
+            console.warn('File looks like JSON but failed to parse', jsonErr);
+          }
+        }
+
+        // If not JSON or JSON parsing yielded nothing, try CSV
+        if (importedTasks.length === 0) {
+          const lines = trimmedContent.split('\n');
+          if (lines.length >= 2) {
+            const headers = lines[0].split(',').map((h: string) => h.trim().toLowerCase());
+            for (let i = 1; i < lines.length; i++) {
+              const line = lines[i].trim();
+              if (!line) continue;
+              
+              const values = line.split(',').map((v: string) => v.trim());
+              const task: any = {};
+              headers.forEach((header: string, index: number) => {
+                if (header.includes('title')) task.title = values[index];
+                else if (header.includes('desc')) task.description = values[index];
+                else if (header.includes('status')) task.status = values[index].toUpperCase();
+                else if (header.includes('priority')) task.priority = values[index].toUpperCase();
+                else if (header.includes('date')) task.dueDate = values[index];
+                else task[header] = values[index];
+              });
+              
+              if (task.title) importedTasks.push(task);
+            }
+          }
+        }
+
+        if (Array.isArray(importedTasks) && importedTasks.length > 0) {
+          let importedCount = 0;
+          let errorCount = 0;
+
+          importedTasks.forEach((task: any) => {
+            const taskData: any = {
+              title: task.title || 'Imported Task',
+              description: task.description || '',
+              status: task.status || TaskStatus.TODO,
+              priority: task.priority || TaskPriority.MEDIUM,
+              dueDate: this.parseDueDate(task.dueDate)
+            };
+
+            this.taskService.createTask(taskData).subscribe({
+              next: () => {
+                importedCount++;
+                if (importedCount + errorCount === importedTasks.length) {
+                  this.loadTasks();
+                  alert(`Import Complete!\nSuccess: ${importedCount}\nErrors: ${errorCount}`);
+                }
+              },
+              error: (err) => {
+                console.error('Error importing individual task', err);
+                errorCount++;
+                if (importedCount + errorCount === importedTasks.length) {
+                  this.loadTasks();
+                  alert(`Import Complete with some errors.\nSuccess: ${importedCount}\nErrors: ${errorCount}`);
+                }
+              }
+            });
+          });
+        } else {
+          alert('No valid tasks found in the file. Please ensure the format is correct.');
+        }
+      } catch (err) {
+        console.error('Error parsing file', err);
+        alert('Failed to parse file. Please check the file content and format.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
-    // Only auto-hide on mobile view (width <= 768px)
     if (window.innerWidth <= 768 && this.showFilters && !this.eRef.nativeElement.contains(event.target)) {
       this.showFilters = false;
     }
+  }
+
+  isToday(date: any): boolean {
+    if (!date) return false;
+    const d = new Date(date);
+    const today = new Date();
+    return d.getDate() === today.getDate() &&
+           d.getMonth() === today.getMonth() &&
+           d.getFullYear() === today.getFullYear();
+  }
+
+  get todayTasks(): Task[] {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const inTwoDays = new Date(today);
+    inTwoDays.setDate(today.getDate() + 2);
+
+    return this.tasks.filter(task => {
+      const taskDate = task.dueDate ? new Date(task.dueDate) : null;
+      if (!taskDate) return false;
+      
+      const isDueToday = taskDate.getTime() >= today.getTime() && 
+                        taskDate.getTime() < new Date(today.getTime() + 86400000).getTime();
+      
+      const isInProgress = task.status === TaskStatus.IN_PROGRESS;
+      const isNotOverdue = taskDate.getTime() >= today.getTime();
+      
+      const isTodoSoon = task.status === TaskStatus.TODO && 
+                        taskDate.getTime() >= today.getTime() && 
+                        taskDate.getTime() <= inTwoDays.getTime();
+
+      return isDueToday || (isInProgress && isNotOverdue) || isTodoSoon;
+    }).sort((a, b) => {
+      const statusOrder = { [TaskStatus.IN_PROGRESS]: 0, [TaskStatus.TODO]: 1, [TaskStatus.COMPLETED]: 2 };
+      const orderA = statusOrder[a.status as keyof typeof statusOrder] ?? 99;
+      const orderB = statusOrder[b.status as keyof typeof statusOrder] ?? 99;
+
+      if (orderA !== orderB) return orderA - orderB;
+
+      const dateA = new Date(a.dueDate!).getTime();
+      const dateB = new Date(b.dueDate!).getTime();
+      if (dateA !== dateB) return dateA - dateB;
+
+      const priorityWeight = { 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1 };
+      const weightA = priorityWeight[a.priority as keyof typeof priorityWeight] || 0;
+      const weightB = priorityWeight[b.priority as keyof typeof priorityWeight] || 0;
+      return weightB - weightA;
+    });
+  }
+
+  get overdueTasks(): Task[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.tasks.filter(task => {
+      if (!task.dueDate || task.status === TaskStatus.COMPLETED) return false;
+      const d = new Date(task.dueDate);
+      d.setHours(0, 0, 0, 0);
+      return d < today;
+    });
+  }
+
+  get completedTasks(): Task[] {
+    return this.tasks.filter(t => t.status === TaskStatus.COMPLETED);
+  }
+
+  get todayProgress(): number {
+    if (this.todayTasks.length === 0) return 0;
+    const completed = this.todayTasks.filter(t => t.status === TaskStatus.COMPLETED).length;
+    return Math.round((completed / this.todayTasks.length) * 100);
+  }
+
+  get overdueSeverityWidth(): number {
+    const count = this.overdueTasks.length;
+    if (count === 0) return 0;
+    if (count <= 2) return 33;
+    if (count < 5) return 66;
+    return 100;
+  }
+
+  get activeFiltersCount(): number {
+    let count = 0;
+    if (this.searchQuery) count++;
+    if (this.selectedStatuses.length > 0) count++;
+    if (this.selectedPriorities.length > 0) count++;
+    if (this.selectedDay !== 'all') count++;
+    if (this.filterFromDate || this.filterToDate) count++;
+    return count;
+  }
+
+  get filteredTasks(): Task[] {
+    return this.tasks.filter(task => {
+      const matchesSearch = !this.searchQuery || 
+        task.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(this.searchQuery.toLowerCase());
+      
+      const matchesStatus = this.selectedStatuses.length === 0 || this.selectedStatuses.includes(task.status);
+      const matchesPriority = this.selectedPriorities.length === 0 || this.selectedPriorities.includes(task.priority);
+      
+      let matchesDate = true;
+      if (this.filterFromDate || this.filterToDate) {
+        if (!task.dueDate) matchesDate = false;
+        else {
+          const d = new Date(task.dueDate).getTime();
+          if (this.filterFromDate && d < new Date(this.filterFromDate).getTime()) matchesDate = false;
+          if (this.filterToDate && d > new Date(this.filterToDate).getTime()) matchesDate = false;
+        }
+      } else if (this.selectedDay !== 'all') {
+        if (!task.dueDate) matchesDate = false;
+        else {
+          const d = new Date(task.dueDate);
+          const target = new Date();
+          if (this.selectedDay === 'yesterday') target.setDate(target.getDate() - 1);
+          else if (this.selectedDay === 'tomorrow') target.setDate(target.getDate() + 1);
+          
+          matchesDate = d.getDate() === target.getDate() &&
+                       d.getMonth() === target.getMonth() &&
+                       d.getFullYear() === target.getFullYear();
+        }
+      }
+      
+      return matchesSearch && matchesStatus && matchesPriority && matchesDate;
+    });
+  }
+
+  get isDashboardView(): boolean {
+    return this.activeFiltersCount === 0;
+  }
+
+  get isMobile(): boolean {
+    return window.innerWidth <= 768;
   }
 }

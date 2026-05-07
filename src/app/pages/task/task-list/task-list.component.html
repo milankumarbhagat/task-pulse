@@ -7,7 +7,7 @@
       <p>{{ today | date: 'EEEE, MMMM d' }}</p>
     </div>
     <div class="v2-header-badge">
-      <span>{{ (todoTasks.length + inProgressTasks.length) }} Tasks Due Today</span>
+      <span>{{ (todayTasks.length - completedTasks.length) }} Active Tasks</span>
     </div>
   </div>
 
@@ -23,10 +23,21 @@
       <span class="v2-filter-count" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
       <span class="v2-filter-open-indicator" *ngIf="showFilters"></span>
     </button>
+    
+    <div class="v2-action-group">
+      <button class="v2-action-btn" (click)="exportToPDF()" title="Export to PDF">
+        <span class="material-icons">picture_as_pdf</span>
+        <span class="hide-mobile">Export PDF</span>
+      </button>
+      <button class="v2-action-btn" (click)="triggerImport()" title="Import Tasks">
+        <span class="material-icons">file_upload</span>
+        <span class="hide-mobile">Import</span>
+      </button>
+      <input type="file" id="importFileInput" (change)="importTasks($event)" accept=".json,.csv,.txt,application/json,text/plain" style="display: none;">
+    </div>
   </div>
 
   <!-- Filter Panel (Desktop: Inline, Mobile: Modal) -->
-  <!-- Desktop Filter Panel -->
   <div class="v2-filter-panel hide-mobile" *ngIf="showFilters">
      <ng-container *ngTemplateOutlet="filterContent"></ng-container>
   </div>
@@ -156,6 +167,9 @@
           </div>
           <div class="v2-item-content">
             <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
+            <p class="v2-item-subtitle" *ngIf="!isToday(task.dueDate) && task.status !== 'COMPLETED'">
+              Due {{ task.dueDate | date:'MMM d' }}
+            </p>
           </div>
           <div class="v2-item-hover-actions" (click)="viewDescription(task)">
              <span class="material-icons hover-edit-icon">edit</span>
