@@ -1,0 +1,17 @@
+{
+  "name": "Task Pulse (STAGING)",
+  "short_name": "TP Staging",
+  "theme_color": "#ff9800",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "icons/logo-staging.png",
+      "sizes": "72x72 96x96 128x128 144x144 152x152 192x192 384x384 512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}
