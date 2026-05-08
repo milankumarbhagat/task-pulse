@@ -19,6 +19,15 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "file-saver",
+              "html2canvas",
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "jszip",
+              "pako"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {

@@ -1,0 +1,108 @@
+.note-snippet {
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.list-tag {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+  display: inline-block;
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Category specific colors for list view */
+.list-tag.work { background-color: #e0e7ff; color: #4338ca; }
+.list-tag.personal { background-color: #fce7f3; color: #be185d; }
+.list-tag.school { background-color: #fef3c7; color: #b45309; }
+.list-tag.health { background-color: #dcfce7; color: #15803d; }
+.list-tag.finance { background-color: #fae8ff; color: #a21caf; }
+.list-tag.ideas { background-color: #cffafe; color: #0f766e; }
+
+.pinned-item {
+  border-left: 4px solid #f59e0b !important;
+}
+
+.paginator-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+/* Dark Mode Overrides */
+:host-context(body.dark-theme) .note-snippet {
+  color: #94a3b8;
+}
+
+:host-context(body.dark-theme) .list-tag {
+  background-color: rgba(255,255,255,0.1);
+  color: #e2e8f0;
+}
+:host-context(body.dark-theme) .list-tag.work { background-color: rgba(67, 56, 202, 0.3); color: #a5b4fc; }
+:host-context(body.dark-theme) .list-tag.personal { background-color: rgba(190, 24, 93, 0.3); color: #f9a8d4; }
+:host-context(body.dark-theme) .list-tag.school { background-color: rgba(180, 83, 9, 0.3); color: #fcd34d; }
+:host-context(body.dark-theme) .list-tag.health { background-color: rgba(21, 128, 61, 0.3); color: #86efac; }
+:host-context(body.dark-theme) .list-tag.finance { background-color: rgba(162, 28, 175, 0.3); color: #f0abfc; }
+:host-context(body.dark-theme) .list-tag.ideas { background-color: rgba(15, 118, 110, 0.3); color: #5eead4; }
+
+:host-context(body.dark-theme) .paginator-container {
+  background: #161616;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+:host-context(body.dark-theme) .pinned-item {
+  border-left-color: #f59e0b !important;
+}
+
+/* ── Notes specific Toolbar Overrides ── */
+.notes-action-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.sort-select, .category-select {
+  margin-bottom: -1.25em; /* Fix material padding */
+}
+
+@media (max-width: 768px) {
+  .v2-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .v2-search-box {
+    max-width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .notes-action-group {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .sort-select, .category-select {
+    flex: 1 1 45%;
+    min-width: 120px;
+  }
+
+  .add-note-btn-v2 {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

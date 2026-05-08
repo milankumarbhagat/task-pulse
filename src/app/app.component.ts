@@ -65,9 +65,25 @@ export class AppComponent {
   toggleMyLists(): void {
     this.isMyListsCollapsed = !this.isMyListsCollapsed;
   }
+  isUtilityMenuOpen = false;
+  isGuestUtilityMenuOpen = false;
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  toggleUtilityMenu(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.isUtilityMenuOpen = !this.isUtilityMenuOpen;
+  }
+
+  toggleGuestUtilityMenu(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.isGuestUtilityMenuOpen = !this.isGuestUtilityMenuOpen;
   }
 
   closeMobileMenu(): void {
