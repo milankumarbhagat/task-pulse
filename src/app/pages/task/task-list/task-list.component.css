@@ -408,29 +408,6 @@
   color: #ef4444;
   font-size: 0.72rem;
   font-weight: 700;
-  margin-bottom: 0.2rem;
-  display: block;
-}
-
-/* Right meta area */
-.v2-item-meta-right {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-left: auto;
-  width: 160px;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-
-.v2-item-tags {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-left: auto;
-  width: 160px;
-  justify-content: flex-end;
-  flex-shrink: 0;
 }
 
 .v2-status-text { font-size: 0.78rem; font-weight: 600; color: #9ca3af; }
@@ -492,6 +469,80 @@
 }
 
 .v2-empty-results p { font-weight: 600; margin: 0; font-size: 0.9rem; }
+
+/* ── Global Empty State ── */
+.v2-global-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+.v2-empty-illustration {
+  width: 80px;
+  height: 80px;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transform: rotate(-10deg);
+}
+
+.v2-empty-illustration .material-icons {
+  font-size: 40px;
+  color: #6366f1;
+}
+
+.v2-global-empty-state h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.v2-global-empty-state p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  max-width: 300px;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+}
+
+.v2-btn-create-first {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.75rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  font-family: inherit;
+}
+
+.v2-btn-create-first:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Dark mode for empty state */
+body.dark-theme .v2-global-empty-state h3 { color: #f9fafb; }
+body.dark-theme .v2-global-empty-state p { color: #9ca3af; }
+body.dark-theme .v2-empty-illustration { background: rgba(139, 92, 246, 0.12); }
+body.dark-theme .v2-empty-illustration .material-icons { color: #a78bfa; }
 
 /* ── Modal ── */
 .task-detail-modal-content { padding: 0 0.25rem; }

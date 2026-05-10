@@ -12,15 +12,15 @@
         <div class="label-with-counter">
           <label for="title">Title <span class="required">*</span></label>
           <span class="char-counter" *ngIf="taskForm.get('title')?.value?.length > 0">
-            {{ taskForm.get('title')?.value?.length }}/50
+            {{ taskForm.get('title')?.value?.length }}/75
           </span>
         </div>
-        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title" maxlength="50">
+        <input type="text" id="title" formControlName="title" class="custom-input" placeholder="Task title" maxlength="75">
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['required']">
           Title is required
         </div>
         <div class="error-text" *ngIf="isSubmitted && taskForm.get('title')?.errors?.['maxlength']">
-          Title cannot exceed 50 characters
+          Title cannot exceed 75 characters
         </div>
       </div>
 
@@ -29,11 +29,11 @@
         <div class="label-with-counter">
           <label for="description">Description</label>
           <span class="char-counter" *ngIf="taskForm.get('description')?.value?.length > 0">
-            {{ taskForm.get('description')?.value?.length }}/200
+            {{ taskForm.get('description')?.value?.length }}/400
           </span>
         </div>
         <textarea id="description" formControlName="description" class="custom-textarea" rows="2" 
-          placeholder="Task description..." maxlength="200"></textarea>
+          placeholder="Task description..." maxlength="400"></textarea>
       </div>
 
       <!-- Due Date -->

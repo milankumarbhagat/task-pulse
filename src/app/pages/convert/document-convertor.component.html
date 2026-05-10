@@ -1,0 +1,83 @@
+<div class="convert-container">
+  <div class="convert-header">
+    <h1>Document Convertor</h1>
+    <p>Premium tools to convert, merge, and compress your documents. High quality, fast, and secure.</p>
+  </div>
+
+  <div class="convert-grid">
+    <div class="convert-card" *ngFor="let tool of tools" (click)="openTool(tool)">
+      <div class="card-icon">
+        <span class="material-icons">{{ tool.icon }}</span>
+      </div>
+      <h3 class="card-title">{{ tool.title }}</h3>
+      <p class="card-desc">{{ tool.description }}</p>
+    </div>
+  </div>
+
+  <!-- Upload Overlay -->
+  <div class="upload-overlay" *ngIf="activeTool" (click)="closeTool()">
+    <div class="upload-modal" (click)="$event.stopPropagation()">
+      <div class="upload-modal-header">
+        <h2>{{ activeTool.title }}</h2>
+        <button class="btn-close" (click)="closeTool()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <!-- Hidden File Input for All Actions -->
+      <input type="file" #fileInput [accept]="activeTool.accept" [multiple]="activeTool.type === 'merge'" (change)="onFileSelected($event)" style="display: none;">
+
+      <!-- Initial Upload State -->
+      <div class="drop-zone" 
+           *ngIf="selectedFiles.length === 0"
+           (click)="fileInput.click()" 
+           (dragover)="onDragOver($event)" 
+           (dragleave)="onDragLeave($event)" 
+           (drop)="onDrop($event)"
+           [class.active]="isDragging">
+        <span class="material-icons">cloud_upload</span>
+        <p>Click or Drag & Drop File{{ activeTool.type === 'merge' ? 's' : '' }}</p>
+        <span>{{ activeTool.format }} files only</span>
+      </div>
+
+      <!-- Loaded/Preview State for Multiple Files -->
+      <div class="preview-container" *ngIf="selectedFiles.length > 0">
+        <!-- Merge tool allows adding more -->
+        <button *ngIf="activeTool.type === 'merge'" class="v2-btn-secondary" style="margin-bottom: 1rem; align-self: flex-start;" (click)="fileInput.click()">
+          + Add More Files
+        </button>
+        
+        <div class="file-list">
+          <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <span class="material-icons" style="color: #ef4444;">
+                {{ activeTool.format === 'PDF' ? 'picture_as_pdf' : (activeTool.format === 'Image' ? 'image' : 'description') }}
+              </span>
+              <div>
+                <div class="file-name">{{ file.name }}</div>
+                <div class="file-size">{{ formatFileSize(file.size) }}</div>
+              </div>
+            </div>
+            <button class="btn-close remove-btn" (click)="removeFile(i)">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </div>
+
+        <button *ngIf="activeTool.type !== 'merge'" class="v2-btn-secondary" style="padding: 0.5rem 1rem; margin-top: 1rem;" (click)="selectedFiles = []; previewUrl = null">
+          Change File
+        </button>
+      </div>
+
+      <div class="upload-actions">
+        <button class="btn-cancel" (click)="closeTool()">Cancel</button>
+        <button class="btn-convert" [disabled]="selectedFiles.length === 0 || isConverting || (activeTool.type === 'merge' && selectedFiles.length < 2)" (click)="convert()">
+          <span class="material-icons" *ngIf="!isConverting">auto_awesome</span>
+          <span class="material-icons rotating" *ngIf="isConverting">sync</span>
+          {{ isConverting ? 'Processing...' : 'Convert Now' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</div>

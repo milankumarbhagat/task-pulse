@@ -29,9 +29,9 @@
           <span class="material-icons">task_alt</span>
           <span>My Tasks</span>
         </a>
-        <a href="javascript:void(0)" routerLinkActive="active" class="sidebar-item">
-          <span class="material-icons">calendar_today</span>
-          <span>Calendar</span>
+        <a routerLink="/convert" routerLinkActive="active" class="sidebar-item">
+          <span class="material-icons">transform</span>
+          <span>Convert</span>
         </a>
         <a href="javascript:void(0)" class="sidebar-item">
           <span class="material-icons">inbox</span>
@@ -50,23 +50,28 @@
       <hr class="sidebar-divider" />
 
       <div class="nav-section">
-        <label>My Lists</label>
-        <a href="javascript:void(0)" class="sidebar-item">
-          <span class="material-icons" style="color: #4f46e5;">folder</span>
-          <span>Work</span>
-        </a>
-        <a href="javascript:void(0)" class="sidebar-item">
-          <span class="material-icons" style="color: #ec4899;">folder</span>
-          <span>Personal</span>
-        </a>
-        <a href="javascript:void(0)" class="sidebar-item">
-          <span class="material-icons" style="color: #eab308;">folder</span>
-          <span>Study</span>
-        </a>
-        <a href="javascript:void(0)" class="sidebar-item">
-          <span class="material-icons" style="color: #10b981;">folder</span>
-          <span>Health</span>
-        </a>
+        <div class="nav-section-header" (click)="toggleMyLists()">
+          <label>My Lists</label>
+          <span class="material-icons collapse-icon" [class.collapsed]="isMyListsCollapsed">expand_more</span>
+        </div>
+        <div class="nav-section-content" [class.collapsed]="isMyListsCollapsed">
+          <a href="javascript:void(0)" class="sidebar-item">
+            <span class="material-icons" style="color: #4f46e5;">folder</span>
+            <span>Work</span>
+          </a>
+          <a href="javascript:void(0)" class="sidebar-item">
+            <span class="material-icons" style="color: #ec4899;">folder</span>
+            <span>Personal</span>
+          </a>
+          <a href="javascript:void(0)" class="sidebar-item">
+            <span class="material-icons" style="color: #eab308;">folder</span>
+            <span>Study</span>
+          </a>
+          <a href="javascript:void(0)" class="sidebar-item">
+            <span class="material-icons" style="color: #10b981;">folder</span>
+            <span>Health</span>
+          </a>
+        </div>
       </div>
     </nav>
 
@@ -94,6 +99,11 @@
         <span class="brand-text">Task Pulse</span>
       </div>
       <div class="auth-btns">
+        <button class="theme-toggle-btn guest-toggle" (click)="themeService.toggleTheme()" [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+          <span class="material-icons">
+            {{ (themeService.theme$ | async) === 'dark' ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
         <a routerLink="/login" class="btn-login">Login</a>
         <a routerLink="/sign-up" class="btn-signup">Sign Up</a>
       </div>

@@ -36,10 +36,15 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
-    transition: all 0.3s ease;
-    margin-top: 0.5rem;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
+}
+
+.btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.18);
+    opacity: 0.98;
 }
 
 .btn-google {
@@ -70,7 +75,13 @@
     border-radius: 0.75rem !important;
     letter-spacing: 0.02em;
     /* background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important; */
-    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39) !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     color: #fff !important;
+}
+
+.submit-btn-signup:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.18) !important;
+    opacity: 0.98 !important;
 }

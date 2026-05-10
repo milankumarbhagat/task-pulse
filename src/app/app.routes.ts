@@ -8,6 +8,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
         canActivate: [authGuard] // check if user is authenticated
     },
+    {
+        path: 'convert',
+        loadComponent: () => import('./pages/convert/document-convertor.component').then(m => m.DocumentConvertorComponent),
+        canActivate: [authGuard]
+    },
     // Use lazy loading for multiple related screens/routes
     {
         path: 'task',

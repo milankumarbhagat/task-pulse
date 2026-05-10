@@ -258,9 +258,8 @@ body {
 } */
 
 .btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.23);
-  background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 .btn-submit:active {
@@ -860,4 +859,68 @@ body.dark-theme .v2-date-input {
 
 body.dark-theme .v2-date-sep {
     color: #64748b !important;
+}
+
+/* ── Document Convertor Dark Mode ── */
+body.dark-theme .convert-header h1 {
+  color: #ffffff !important;
+}
+
+body.dark-theme .convert-card {
+  background: #161616 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .convert-card:hover {
+  border-color: #6366f1 !important;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-theme .card-title {
+  color: #f8fafc !important;
+}
+
+body.dark-theme .card-desc {
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .upload-modal {
+  background: #161616 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 50px 80px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-theme .upload-modal-header h2 {
+  color: #f8fafc !important;
+}
+
+body.dark-theme .btn-close {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .preview-container, 
+body.dark-theme .drop-zone {
+  background: #0d0d0d !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-theme .file-name {
+  color: #f8fafc !important;
+}
+
+body.dark-theme .file-preview-box {
+  background: #1c1c1c !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-theme .btn-cancel {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
 }
