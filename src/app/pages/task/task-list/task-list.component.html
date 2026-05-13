@@ -6,8 +6,11 @@
       <h1>{{ greeting }}, {{ (authService.currentUser$ | async)?.firstName }}!</h1>
       <p>{{ today | date: 'EEEE, MMMM d' }}</p>
     </div>
-    <div class="v2-header-badge">
-      <span>{{ (todayTasks.length - completedTasks.length) }} Active Tasks</span>
+    <div class="v2-header-badge" *ngIf="activeTasksCount > 0">
+      <span>{{ activeTasksCount }} Active Tasks</span>
+    </div>
+    <div class="v2-header-badge empty" *ngIf="activeTasksCount === 0 && tasks.length > 0">
+      <span>All Done!</span>
     </div>
   </div>
 
@@ -27,7 +30,7 @@
     <div class="v2-action-group">
       <button class="v2-action-btn" (click)="exportToPDF()" title="Export to PDF">
         <span class="material-icons">picture_as_pdf</span>
-        <span class="hide-mobile">Export PDF</span>
+        <span class="hide-mobile">Export Task</span>
       </button>
       <button class="v2-action-btn" (click)="triggerImport()" title="Import Tasks">
         <span class="material-icons">file_upload</span>
@@ -55,9 +58,9 @@
          <div class="v2-filter-group">
            <label>Status</label>
            <div class="v2-chips">
-              <span class="v2-chip" [class.active]="selectedStatuses.includes('TODO')" (click)="toggleStatusFilter('TODO')">To Do</span>
-              <span class="v2-chip" [class.active]="selectedStatuses.includes('IN_PROGRESS')" (click)="toggleStatusFilter('IN_PROGRESS')">Progress</span>
-              <span class="v2-chip" [class.active]="selectedStatuses.includes('COMPLETED')" (click)="toggleStatusFilter('COMPLETED')">Done</span>
+               <span class="v2-chip" [class.active]="selectedStatuses.includes('TODO')" (click)="toggleStatusFilter('TODO')">To Do</span>
+               <span class="v2-chip" [class.active]="selectedStatuses.includes('IN_PROGRESS')" (click)="toggleStatusFilter('IN_PROGRESS')">In Progress</span>
+               <span class="v2-chip" [class.active]="selectedStatuses.includes('COMPLETED')" (click)="toggleStatusFilter('COMPLETED')">Done</span>
            </div>
          </div>
          <div class="v2-filter-group">
@@ -114,20 +117,16 @@
           <span *ngIf="task.status === 'TODO'" class="material-icons">radio_button_unchecked</span>
           <span *ngIf="task.status === 'COMPLETED'" class="material-icons" style="color: #10b981;">check_circle</span>
         </div>
-        <div class="v2-item-content">
-          <div class="v2-item-meta">
-            <span class="v2-overdue-label">(Urgent! overdue {{ task.dueDate | date:'MMM d' }})</span>
-          </div>
+        <div class="v2-item-content" (click)="viewDescription(task)">
           <h4 class="v2-item-title">{{ task.title }}</h4>
+          <p class="v2-item-subtitle">
+            <span class="v2-overdue-label">Overdue {{ task.dueDate | date:'MMM d' }}</span> • 
+            {{ formatStatus(task.status) | titlecase }} • 
+            {{ task.priority | titlecase }}
+          </p>
         </div>
-        <div class="v2-item-hover-actions" (click)="viewDescription(task)">
+        <div class="v2-item-hover-actions" (click)="onEditTask(task.id)">
            <span class="material-icons hover-edit-icon">edit</span>
-        </div>
-        <div class="v2-item-tags">
-          <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-status-text" style="margin-right: 0.5rem; font-size: 0.8rem; font-weight: 700; color: #64748b;">
-            Progress
-          </span>
-          <span class="v2-tag priority-tag" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
         </div>
         <div class="v2-item-actions">
            <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{ task: task }" (click)="$event.stopPropagation()">
@@ -139,7 +138,7 @@
   </div>
 
   <!-- Today's Schedule -->
-  <div class="v2-section" *ngIf="isDashboardView">
+  <div class="v2-section" *ngIf="isDashboardView && tasks.length > 0">
     <div class="v2-section-header">
       <h3>Today's Schedule</h3>
       <button class="v2-add-btn" (click)="router.navigate(['/task/add'])">
@@ -165,18 +164,18 @@
             <span *ngIf="task.status === 'TODO'" class="material-icons">radio_button_unchecked</span>
             <span *ngIf="task.status === 'COMPLETED'" class="material-icons" style="color: #10b981;">check_circle</span>
           </div>
-          <div class="v2-item-content">
+          <div class="v2-item-content" (click)="viewDescription(task)">
             <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
-            <p class="v2-item-subtitle" *ngIf="!isToday(task.dueDate) && task.status !== 'COMPLETED'">
-              Due {{ task.dueDate | date:'MMM d' }}
+            <p class="v2-item-subtitle">
+              {{ formatStatus(task.status) | titlecase }} • 
+              {{ task.dueDate | date:'MMM d' }} • 
+              {{ task.priority | titlecase }}
             </p>
           </div>
-          <div class="v2-item-hover-actions" (click)="viewDescription(task)">
+          <div class="v2-item-hover-actions" (click)="onEditTask(task.id)">
              <span class="material-icons hover-edit-icon">edit</span>
           </div>
           <div class="v2-item-meta-right">
-            <span *ngIf="task.status === 'IN_PROGRESS'" class="v2-status-text">Progress</span>
-            <span class="v2-tag priority-tag small" [ngClass]="task.priority.toLowerCase()">{{ task.priority | titlecase }}</span>
           </div>
           <div class="v2-item-actions">
              <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{ task: task }" (click)="$event.stopPropagation()">
@@ -204,15 +203,15 @@
               <span *ngIf="task.status === 'TODO'" class="material-icons">radio_button_unchecked</span>
               <span *ngIf="task.status === 'COMPLETED'" class="material-icons" style="color: #10b981;">check_circle</span>
             </div>
-            <div class="v2-item-content">
+            <div class="v2-item-content" (click)="viewDescription(task)">
               <h4 class="v2-item-title" [class.completed]="task.status === 'COMPLETED'">{{ task.title }}</h4>
               <p class="v2-item-subtitle">
-                <span *ngIf="task.status === 'IN_PROGRESS'">Progress • </span>
+                {{ formatStatus(task.status) | titlecase }} • 
                 {{ task.dueDate | date:'MMM d' }} • 
                 {{ task.priority | titlecase }}
               </p>
             </div>
-            <div class="v2-item-hover-actions" (click)="viewDescription(task)">
+            <div class="v2-item-hover-actions" (click)="onEditTask(task.id)">
                <span class="material-icons hover-edit-icon">edit</span>
             </div>
             <div class="v2-item-actions">
@@ -221,11 +220,20 @@
                </button>
             </div>
         </div>
-        <div *ngIf="filteredTasks.length === 0" class="v2-empty-results">
-           <span class="material-icons">search_off</span>
-           <p>No tasks found matching your filters.</p>
-        </div>
      </div>
+  </div>
+
+  <!-- Global Empty State -->
+  <div *ngIf="tasks.length === 0" class="v2-global-empty-state">
+     <div class="v2-empty-illustration">
+       <span class="material-icons">task_alt</span>
+     </div>
+     <h3>No tasks!</h3>
+     <p>Your schedule is clear. Ready to plan your first task?</p>
+     <button class="v2-btn-create-first" (click)="onAddTask()">
+       <span class="material-icons">add</span>
+       Create Your First Task
+     </button>
   </div>
 
   <!-- Shared Context Menu -->
@@ -254,7 +262,7 @@
           {{ selectedTaskForDescription.priority | titlecase }}
         </span>
         <span *ngIf="selectedTaskForDescription" class="badge status-badge" [ngClass]="getStatusClass(selectedTaskForDescription.status)">
-          {{ selectedTaskForDescription.status | titlecase }}
+          {{ formatStatus(selectedTaskForDescription.status) | titlecase }}
         </span>
       </div>
 
@@ -286,17 +294,18 @@
   <app-modal 
     [isOpen]="!!taskToComplete" 
     (isOpenChange)="!$event ? cancelComplete() : null" 
-    title="Complete Task?"
+    title="{{ taskToComplete?.status === 'TODO' ? 'Start Task?' : 'Complete Task?' }}"
     modalWidth="400px"
     [showCloseBtn]="true">
     <div class="v2-confirm-modal">
-      <div class="confirm-icon">
-        <span class="material-icons">check_circle</span>
+      <div class="confirm-icon" [style.background]="taskToComplete?.status === 'TODO' ? 'rgba(99, 102, 241, 0.1)' : 'rgba(16, 185, 129, 0.1)'" [style.color]="taskToComplete?.status === 'TODO' ? '#6366f1' : '#10b981'">
+        <span class="material-icons">{{ taskToComplete?.status === 'TODO' ? 'play_circle' : 'check_circle' }}</span>
       </div>
-      <p>Are you sure you want to mark <strong>{{ taskToComplete?.title }}</strong> as completed?</p>
+      <p *ngIf="taskToComplete?.status === 'TODO'">Are you sure you want to start <strong>{{ taskToComplete?.title }}</strong>?</p>
+      <p *ngIf="taskToComplete?.status !== 'TODO'">Are you sure you want to mark <strong>{{ taskToComplete?.title }}</strong> as completed?</p>
       <div class="confirm-actions">
         <button class="v2-btn-secondary" (click)="cancelComplete()">Cancel</button>
-        <button class="v2-btn-primary" (click)="confirmComplete()">Yes, Complete it</button>
+        <button class="v2-btn-primary" (click)="confirmComplete()">{{ taskToComplete?.status === 'TODO' ? 'Yes, Start it' : 'Yes, Complete it' }}</button>
       </div>
     </div>
   </app-modal>

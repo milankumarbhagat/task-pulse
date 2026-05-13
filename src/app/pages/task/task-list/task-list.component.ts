@@ -187,12 +187,20 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   markComplete(task: Task): void {
     if (task.status === TaskStatus.COMPLETED) return;
-    const updatedTask = { ...task, status: TaskStatus.COMPLETED as any };
+    
+    let nextStatus: TaskStatus;
+    if (task.status === TaskStatus.TODO) {
+      nextStatus = TaskStatus.IN_PROGRESS;
+    } else {
+      nextStatus = TaskStatus.COMPLETED;
+    }
+
+    const updatedTask = { ...task, status: nextStatus as any };
     this.taskService.updateTask(task.id!, updatedTask).subscribe({
       next: () => {
-        task.status = TaskStatus.COMPLETED;
+        task.status = nextStatus;
       },
-      error: (error) => console.error('Error marking task as complete', error)
+      error: (error) => console.error('Error updating task status', error)
     });
   }
 
@@ -239,6 +247,11 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     this.saveFilters();
   }
 
+  formatStatus(status: string): string {
+    if (!status) return '';
+    return status.replace(/_/g, ' ');
+  }
+
   getStatusClass(status: string): string {
     return `status-${status.toLowerCase()}`;
   }
@@ -247,15 +260,40 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     return `priority-${priority.toLowerCase()}`;
   }
 
-  exportToPDF(): void {
+  private async getLogoBase64(): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => resolve('');
+      img.src = 'icons/icon-72x72.png';
+    });
+  }
+
+  async exportToPDF(): Promise<void> {
     const doc = new jsPDF();
-    const tasksToExport = this.tasks;
+    const tasksToExport = this.filteredTasks;
     
+    const logo = await this.getLogoBase64();
+    if (logo) {
+      doc.addImage(logo, 'PNG', 14, 10, 10, 10);
+    }
+
     doc.setFontSize(18);
-    doc.text('Task Pulse - Task Report', 14, 20);
+    doc.setTextColor(79, 70, 229);
+    doc.text('Task Pulse - Task Report', logo ? 28 : 14, 18);
+    
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 28);
+    doc.setDrawColor(230, 230, 230);
+    doc.line(14, 32, 196, 32);
     
     const tableData = tasksToExport.map(task => [
       task.title,
@@ -396,7 +434,14 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
-    if (window.innerWidth <= 768 && this.showFilters && !this.eRef.nativeElement.contains(event.target)) {
+    const filterBtn = document.querySelector('.v2-filter-btn');
+    const filterPanel = document.querySelector('.v2-filter-panel');
+    const mobileModal = document.querySelector('.v2-mobile-filter-container');
+    
+    // Close desktop dropdown if clicking outside
+    if (this.showFilters && !this.isMobile && 
+        filterPanel && !filterPanel.contains(event.target) && 
+        filterBtn && !filterBtn.contains(event.target)) {
       this.showFilters = false;
     }
   }
@@ -458,6 +503,10 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       d.setHours(0, 0, 0, 0);
       return d < today;
     });
+  }
+
+  get activeTasksCount(): number {
+    return this.todayTasks.filter(t => t.status !== TaskStatus.COMPLETED).length;
   }
 
   get completedTasks(): Task[] {

@@ -60,6 +60,11 @@ export class AppComponent {
   }
 
   isMobileMenuOpen = false;
+  isMyListsCollapsed = false;
+
+  toggleMyLists(): void {
+    this.isMyListsCollapsed = !this.isMyListsCollapsed;
+  }
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
