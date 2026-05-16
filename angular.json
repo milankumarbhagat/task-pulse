@@ -64,7 +64,10 @@
               "serviceWorker": "ngsw-config.json"
             },
             "development": {
-              "index": "src/index.staging.html",
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -76,7 +79,10 @@
               ]
             },
             "local": {
-              "index": "src/index.staging.html",
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
