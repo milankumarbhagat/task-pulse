@@ -10,13 +10,36 @@ export const routes: Routes = [
     },
     {
         path: 'convert',
-        loadComponent: () => import('./pages/convert/document-convertor.component').then(m => m.DocumentConvertorComponent),
-        canActivate: [authGuard]
+        loadComponent: () => import('./pages/convert/document-convertor.component').then(m => m.DocumentConvertorComponent)
     },
     // Use lazy loading for multiple related screens/routes
     {
         path: 'task',
         loadChildren: () => import('./pages/task/task.routes').then(m => m.TASK_ROUTES),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'analytics',
+        loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'utilities/video-to-mp3',
+        loadComponent: () => import('./pages/utilities/video-to-mp3/video-to-mp3.component').then(m => m.VideoToMp3Component)
+    },
+    {
+        path: 'notes',
+        loadComponent: () => import('./pages/notes/notes-list/notes-list.component').then(m => m.NotesListComponent),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'notes/new',
+        loadComponent: () => import('./pages/notes/note-form/note-form.component').then(m => m.NoteFormComponent),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'notes/edit/:id',
+        loadComponent: () => import('./pages/notes/note-form/note-form.component').then(m => m.NoteFormComponent),
         canActivate: [authGuard]
     },
     // Use lazy loading for single screen

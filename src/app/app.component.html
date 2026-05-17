@@ -1,5 +1,5 @@
 <div class="app-layout" [class.mobile-menu-open]="isMobileMenuOpen">
-  
+
   <!-- Sidebar -->
   <aside class="sidebar" *ngIf="authService.currentUser$ | async as user">
     <div class="sidebar-header">
@@ -8,7 +8,8 @@
         <span class="brand-text">Task Pulse</span>
       </div>
       <div class="header-actions">
-        <button class="theme-toggle-btn" (click)="themeService.toggleTheme()" [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+        <button class="theme-toggle-btn" (click)="themeService.toggleTheme()"
+          [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
           <span class="material-icons">
             {{ (themeService.theme$ | async) === 'dark' ? 'light_mode' : 'dark_mode' }}
           </span>
@@ -29,18 +30,47 @@
           <span class="material-icons">task_alt</span>
           <span>My Tasks</span>
         </a>
-        <a routerLink="/convert" routerLinkActive="active" class="sidebar-item">
-          <span class="material-icons">transform</span>
-          <span>Convert</span>
+
+        <a routerLink="/notes" routerLinkActive="active" class="sidebar-item">
+          <span class="material-icons">notes</span>
+          <span>Notes</span>
+        </a>
+        <a href="javascript:void(0)" routerLinkActive="active" class="sidebar-item">
+          <span class="material-icons">calendar_today</span>
+          <span>Calendar</span>
         </a>
         <a href="javascript:void(0)" class="sidebar-item">
           <span class="material-icons">inbox</span>
           <span>Inbox</span>
         </a>
-        <a href="javascript:void(0)" class="sidebar-item">
+        <a routerLink="/analytics" routerLinkActive="active" class="sidebar-item">
           <span class="material-icons">analytics</span>
           <span>Analytics</span>
         </a>
+
+        <div class="sidebar-menu-group">
+          <a href="javascript:void(0)" class="sidebar-item" (click)="toggleUtilityMenu($event)"
+            style="display: flex; align-items: center; width: 100%;">
+            <span class="material-icons">build</span>
+            <span style="flex: 1;">Utility</span>
+            <span class="material-icons" [style.transform]="isUtilityMenuOpen ? 'rotate(180deg)' : 'rotate(0)'"
+              style="transition: transform 0.2s; font-size: 18px;">expand_more</span>
+          </a>
+          <div *ngIf="isUtilityMenuOpen" class="sidebar-submenu"
+            style="padding-left: 2rem; display: flex; flex-direction: column; margin-top: 0.25rem;">
+            <a routerLink="/convert" routerLinkActive="active" class="sidebar-item"
+              style="padding: 0.5rem 1rem; opacity: 0.8;">
+              <span class="material-icons" style="font-size: 1.1rem;">transform</span>
+              <span style="font-size: 0.9rem;">Convert</span>
+            </a>
+            <a routerLink="/utilities/video-to-mp3" routerLinkActive="active" class="sidebar-item"
+              style="padding: 0.5rem 1rem; opacity: 0.8;">
+              <span class="material-icons" style="font-size: 1.1rem;">audiotrack</span>
+              <span style="font-size: 0.9rem;">Video to MP3</span>
+            </a>
+          </div>
+        </div>
+
         <a href="javascript:void(0)" class="sidebar-item">
           <span class="material-icons">settings</span>
           <span>Settings</span>
@@ -77,7 +107,9 @@
 
     <div class="sidebar-footer">
       <div class="user-profile" (click)="router.navigate(['/profile']); closeMobileMenu()">
-        <img [src]="user.picture || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=6366f1&color=fff'" alt="User" />
+        <img
+          [src]="user.picture || 'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=6366f1&color=fff'"
+          alt="User" />
         <div class="user-info">
           <span class="user-name">{{user.firstName}} {{user.lastName}}</span>
           <span class="user-badge">Premium</span>
@@ -99,11 +131,27 @@
         <span class="brand-text">Task Pulse</span>
       </div>
       <div class="auth-btns">
-        <button class="theme-toggle-btn guest-toggle" (click)="themeService.toggleTheme()" [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+        <button class="theme-toggle-btn guest-toggle" (click)="themeService.toggleTheme()"
+          [attr.aria-label]="(themeService.theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
           <span class="material-icons">
             {{ (themeService.theme$ | async) === 'dark' ? 'light_mode' : 'dark_mode' }}
           </span>
         </button>
+        <div class="guest-dropdown" style="position: relative;">
+          <button class="btn-guest-utility" (click)="toggleGuestUtilityMenu($event)" style="background: none; border: none; color: var(--content-text); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-weight: 500; font-size: 0.9rem; padding: 0.55rem; border-radius: 8px;">
+            Utility <span class="material-icons" style="font-size: 18px;">expand_more</span>
+          </button>
+          <div *ngIf="isGuestUtilityMenuOpen" class="guest-dropdown-menu" style="position: absolute; top: 100%; right: 0; background: var(--sidebar-bg); border: 1px solid var(--sidebar-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 0.5rem; min-width: 150px; z-index: 1001; padding: 0.5rem 0;">
+            <a routerLink="/convert" (click)="isGuestUtilityMenuOpen = false" class="sidebar-item" style="padding: 0.5rem 1rem; border-radius: 0; margin-bottom: 0;">
+              <span class="material-icons" style="font-size: 1.1rem;">transform</span>
+              <span style="font-size: 0.9rem;">Convert</span>
+            </a>
+            <a routerLink="/utilities/video-to-mp3" (click)="isGuestUtilityMenuOpen = false" class="sidebar-item" style="padding: 0.5rem 1rem; border-radius: 0; margin-bottom: 0;">
+              <span class="material-icons" style="font-size: 1.1rem;">audiotrack</span>
+              <span style="font-size: 0.9rem;">Video to MP3</span>
+            </a>
+          </div>
+        </div>
         <a routerLink="/login" class="btn-login">Login</a>
         <a routerLink="/sign-up" class="btn-signup">Sign Up</a>
       </div>

@@ -19,6 +19,15 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "file-saver",
+              "html2canvas",
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "jszip",
+              "pako"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -55,7 +64,10 @@
               "serviceWorker": "ngsw-config.json"
             },
             "development": {
-              "index": "src/index.staging.html",
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -67,7 +79,10 @@
               ]
             },
             "local": {
-              "index": "src/index.staging.html",
+              "index": {
+                "input": "src/index.staging.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true

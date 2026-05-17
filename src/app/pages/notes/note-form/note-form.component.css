@@ -1,0 +1,95 @@
+.note-form-wrapper {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-card {
+  border-radius: 12px;
+  padding: 16px 8px;
+}
+
+.note-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.note-textarea textarea {
+  line-height: 1.6;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.submit-btn {
+  padding: 0 24px;
+}
+
+.cancel-btn {
+  color: #666;
+}
+
+/* Dark Mode Overrides */
+:host-context(body.dark-theme) .page-title {
+  color: #f9fafb;
+}
+
+:host-context(body.dark-theme) .form-card {
+  background-color: #161616;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+:host-context(body.dark-theme) .form-actions {
+  border-top-color: rgba(255,255,255,0.06);
+}
+
+:host-context(body.dark-theme) .cancel-btn {
+  color: #e2e8f0 !important;
+}
+
+:host-context(body.dark-theme) .cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+:host-context(body.dark-theme) .submit-btn {
+  background-color: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+:host-context(body.dark-theme) .submit-btn:hover {
+  background-color: #4338ca !important;
+}
+
+:host-context(body.dark-theme) .submit-btn[disabled] {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+:host-context(body.dark-theme) .back-btn {
+  color: #e2e8f0 !important;
+}
