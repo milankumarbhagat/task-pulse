@@ -1,0 +1,100 @@
+<div class="analytics-container" *ngIf="!loading && analyticsData">
+  <div class="header">
+    <div class="header-content">
+      <h2>Analytics Dashboard</h2>
+      <p>Track your productivity and task distributions.</p>
+    </div>
+    <div class="timeframe-selector">
+      <select [(ngModel)]="selectedTimeframe" (change)="onTimeframeChange()" class="timeframe-dropdown">
+        <option value="7d">Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+        <option value="all">All Time</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="metric-cards">
+    <div class="card card-total">
+      <div class="card-icon">
+        <i class="fas fa-tasks"></i>
+      </div>
+      <div class="card-info">
+        <span class="label">Total Tasks</span>
+        <span class="value">{{ analyticsData.totalTasks }}</span>
+      </div>
+    </div>
+
+    <div class="card card-completed">
+      <div class="card-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="card-info">
+        <span class="label">Completed</span>
+        <span class="value">{{ analyticsData.completedTasks }}</span>
+      </div>
+    </div>
+
+    <div class="card card-overdue">
+      <div class="card-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="card-info">
+        <span class="label">Overdue</span>
+        <span class="value">{{ analyticsData.overdueTasks }}</span>
+      </div>
+    </div>
+
+    <div class="card card-rate">
+      <div class="card-icon">
+        <i class="fas fa-chart-pie"></i>
+      </div>
+      <div class="card-info">
+        <span class="label">Completion Rate</span>
+        <span class="value">{{ completionRate }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <div class="chart-container trend-chart">
+      <canvas baseChart
+              [data]="trendChartData"
+              [options]="trendChartOptions"
+              [type]="'line'">
+      </canvas>
+    </div>
+
+    <div class="bottom-charts">
+      <div class="chart-container doughnut-chart">
+        <div *ngIf="analyticsData.tasksByPriority?.length; else noDataPriority" class="canvas-wrapper">
+          <canvas baseChart
+                  [data]="priorityChartData"
+                  [options]="priorityChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+        <ng-template #noDataPriority>
+          <div class="no-data">No Priority Data</div>
+        </ng-template>
+      </div>
+
+      <div class="chart-container pie-chart">
+        <div *ngIf="analyticsData.tasksByStatus?.length; else noDataStatus" class="canvas-wrapper">
+          <canvas baseChart
+                  [data]="statusChartData"
+                  [options]="statusChartOptions"
+                  [type]="'pie'">
+          </canvas>
+        </div>
+        <ng-template #noDataStatus>
+          <div class="no-data">No Status Data</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading analytics...</p>
+</div>

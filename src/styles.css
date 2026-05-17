@@ -721,7 +721,7 @@ body.dark-theme .mat-mdc-radio-button .mdc-label {
 }
 
 /* Material Select Panel Dark Mode */
-.cdk-overlay-container .mat-mdc-select-panel {
+body.dark-theme .cdk-overlay-container .mat-mdc-select-panel {
   background-color: #0f172a !important;
 }
 
@@ -772,11 +772,50 @@ body.dark-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
   background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
+/* Paginator Dark Mode */
+body.dark-theme .mat-mdc-paginator {
+  background-color: transparent !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-mdc-paginator .mat-mdc-icon-button {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-mdc-paginator .mat-mdc-select-value-text,
+body.dark-theme .mat-mdc-paginator .mat-mdc-paginator-range-label,
+body.dark-theme .mat-mdc-paginator .mat-mdc-paginator-page-size-label {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .mat-mdc-paginator .mat-mdc-paginator-icon {
+  fill: #f1f5f9 !important;
+}
+
 body.dark-theme .mat-mdc-form-field-infix,
 body.dark-theme .mat-mdc-select-value,
 body.dark-theme .mat-mdc-select-arrow,
 body.dark-theme .mat-mdc-form-field-label {
   color: #f1f5f9 !important;
+}
+
+/* Material Form Field Outline Dark Mode */
+body.dark-theme .mdc-notched-outline__leading,
+body.dark-theme .mdc-notched-outline__notch,
+body.dark-theme .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.dark-theme .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+body.dark-theme .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+body.dark-theme .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+body.dark-theme .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+body.dark-theme .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+body.dark-theme .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #818cf8 !important;
 }
 
 body.dark-theme .mat-mdc-form-field-outline {
@@ -823,6 +862,18 @@ body.dark-theme .mat-mdc-form-field-flex,
 body.dark-theme .occupation-wrapper .mat-mdc-form-field {
     background-color: rgba(255, 255, 255, 0.05) !important;
     background: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-theme input.mat-mdc-input-element,
+body.dark-theme textarea.mat-mdc-input-element,
+body.dark-theme .mat-mdc-input-element {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme input.mat-mdc-input-element::placeholder,
+body.dark-theme textarea.mat-mdc-input-element::placeholder,
+body.dark-theme .mat-mdc-input-element::placeholder {
+  color: #64748b !important;
 }
 
 body.dark-theme .mat-calendar-body-cell-content {

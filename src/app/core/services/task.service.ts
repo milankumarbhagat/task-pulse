@@ -31,4 +31,8 @@ export class TaskService {
   deleteTask(id: string | number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getAnalytics(timeframe: string = '7d'): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/analytics?timeframe=${timeframe}`);
+  }
 }
